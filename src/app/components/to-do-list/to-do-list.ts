@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Signal } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
+import { ToDoTask } from 'src/app/models/to-do-task';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -17,12 +18,12 @@ export class ToDoList {
   /**
    * Поле для хранения названия новой таски из Input
    */
-  public newTaskTitle = '';
+  public newTaskTitle: string = '';
 
   /**
    * Список тасок
    */
-  public taskList;
+  public taskList: Signal<ToDoTask[]>;
 
   //endregion
   //region Ctor
