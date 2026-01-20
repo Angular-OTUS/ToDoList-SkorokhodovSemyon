@@ -1,0 +1,27 @@
+<div class="todo-card">
+
+  <h1 class="todo-card__title">Todo List</h1>
+
+  <ul class="task-list">
+    @for (task of taskList(); track task.id) {
+      <li class="task-item">
+        <span class="task-item__text">{{ task.title }}</span>
+        <button class="task-item__delete-button" (click)="removeTaskHandler(task.id)">Удалить</button>
+      </li>
+    } @empty {
+      <p class="task-list__empty-message">Список задач пуст</p>
+    }
+  </ul>
+
+  <div class="add-form">
+    <input
+      class="add-form__input"
+      type="text"
+      placeholder="Название задачи"
+      [(ngModel)]="newTaskTitle"
+      (keyup.enter)="addTaskHandler()"
+    />
+    <button class="add-form__button" (click)="addTaskHandler()">Добавить</button>
+  </div>
+
+</div>
