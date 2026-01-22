@@ -1,18 +1,27 @@
-import { Component, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
 import { ToDoTask } from 'src/app/models/to-do-task';
+import { ToDoListItem } from 'src/app/components/to-do-list-item/to-do-list-item';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 /**
  * Компонент для отображения списка тасок и управления ими
  */
 @Component({
   selector: 'app-to-do-list',
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    ToDoListItem,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToDoList {
+export class ToDoList implements OnInit {
   //region Fields
 
   /**
@@ -23,19 +32,17 @@ export class ToDoList {
   /**
    * Список тасок
    */
-  public taskList: Signal<ToDoTask[]>;
-
-  //endregion
-  //region Ctor
+  public taskList: Signal<ToDoTask[]> = signal<ToDoTask[]>([]);
 
   /**
-   * Конструктор
-   *
-   * @param toDoListService - сервис для работы с тасками
+   * Сервис для работы с тасками
    */
-  constructor(
-    private toDoListService: ToDoListService,
-  ) {
+  toDoListService = inject(ToDoListService);
+
+  //endregion
+  //region Hooks
+
+  ngOnInit() {
 
     this.taskList = this.toDoListService.getTaskList();
   }
