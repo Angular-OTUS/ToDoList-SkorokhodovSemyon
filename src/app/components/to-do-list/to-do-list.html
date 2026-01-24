@@ -2,19 +2,24 @@
 
   <h1 class="todo-card__title">Todo List</h1>
 
-  <ul class="task-list">
-    @for (task of taskList(); track task.id) {
-      <app-to-do-list-item
-        class="task-list__item"
-        [item]="task"
-        (remove)="removeTaskHandler($event)"
-      >
-      </app-to-do-list-item>
-    } @empty {
-      <p class="task-list__empty-message">Список задач пуст</p>
-    }
-  </ul>
-
+  @if (!isLoading()) {
+    <ul class="task-list">
+      @for (task of taskList(); track task.id) {
+        <app-to-do-list-item
+          class="task-list__item"
+          [item]="task"
+          (remove)="removeTaskHandler($event)"
+        >
+        </app-to-do-list-item>
+      } @empty {
+        <p class="task-list__empty-message">Список задач пуст</p>
+      }
+    </ul>
+  } @else {
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
   <div class="add-form">
     <mat-form-field class="add-form__input-field" appearance="outline">
       <mat-label>Название задачи</mat-label>
@@ -26,7 +31,13 @@
         (keyup.enter)="addTaskHandler()"
       />
     </mat-form-field>
-    <button class="button button--add" (click)="addTaskHandler()" [disabled]="!newTaskTitle.trim()">Добавить</button>
+    <app-button
+      (click)="addTaskHandler()"
+      [disabled]="!newTaskTitle.trim()"
+      [title]="'Добавить'"
+      [typeButton]="'add'"
+    >
+    </app-button>
   </div>
 
 </div>

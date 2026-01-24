@@ -1,4 +1,8 @@
 <li class="task-item">
   <span class="task-item__text">{{ item().title }}</span>
-  <button class="button button--delete" (click)="onRemove()">Удалить</button>
+  <app-button
+    [title]="'Удалить'"
+    [typeButton]="'delete'"
+    (click)="onRemove()"
+  ></app-button>
 </li>
