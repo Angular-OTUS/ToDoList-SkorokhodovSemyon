@@ -3,7 +3,6 @@ import { ToDoTask } from 'src/app/models/to-do-task';
 
 @Component({
   selector: 'app-to-do-list-item',
-  imports: [ ],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -14,7 +13,7 @@ export class ToDoListItem {
   /**
    * Данные о задаче, которые приходят от родительского компонента.
    */
-  item = input.required<ToDoTask>();
+  readonly item = input.required<ToDoTask>();
 
   //endregion
   //region Output

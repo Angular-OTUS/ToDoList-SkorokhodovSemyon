@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
 import { ToDoTask } from 'src/app/models/to-do-task';
@@ -21,8 +21,13 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './to-do-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToDoList implements OnInit {
+export class ToDoList {
   //region Fields
+
+  /**
+   * Сервис для работы с тасками
+   */
+  readonly toDoListService = inject(ToDoListService);
 
   /**
    * Поле для хранения названия новой таски из Input
@@ -32,20 +37,7 @@ export class ToDoList implements OnInit {
   /**
    * Список тасок
    */
-  public taskList: Signal<ToDoTask[]> = signal<ToDoTask[]>([]);
-
-  /**
-   * Сервис для работы с тасками
-   */
-  toDoListService = inject(ToDoListService);
-
-  //endregion
-  //region Hooks
-
-  ngOnInit() {
-
-    this.taskList = this.toDoListService.getTaskList();
-  }
+  public taskList: Signal<ToDoTask[]> = this.toDoListService.getTaskList()
 
   //endregion
   //region Handler
