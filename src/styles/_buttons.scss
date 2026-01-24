@@ -1,0 +1,30 @@
+@use 'sass:color';
+@use 'variables' as v;
+
+.button {
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &--add {
+    background-color: v.$green-color;
+    color: var(--primary-button-text);
+
+    &:hover {
+      background-color: v.$green-hover-color;
+    }
+  }
+
+  &--delete {
+    background-color: v.$red-color;
+    color: var(--primary-button-text);
+
+    &:hover {
+      background-color: v.$red-hover-color;
+    }
+  }
+}

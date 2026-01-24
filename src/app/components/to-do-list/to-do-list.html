@@ -4,24 +4,29 @@
 
   <ul class="task-list">
     @for (task of taskList(); track task.id) {
-      <li class="task-item">
-        <span class="task-item__text">{{ task.title }}</span>
-        <button class="task-item__delete-button" (click)="removeTaskHandler(task.id)">Удалить</button>
-      </li>
+      <app-to-do-list-item
+        class="task-list__item"
+        [item]="task"
+        (remove)="removeTaskHandler($event)"
+      >
+      </app-to-do-list-item>
     } @empty {
       <p class="task-list__empty-message">Список задач пуст</p>
     }
   </ul>
 
   <div class="add-form">
-    <input
-      class="add-form__input"
-      type="text"
-      placeholder="Название задачи"
-      [(ngModel)]="newTaskTitle"
-      (keyup.enter)="addTaskHandler()"
-    />
-    <button class="add-form__button" (click)="addTaskHandler()">Добавить</button>
+    <mat-form-field class="add-form__input-field" appearance="outline">
+      <mat-label>Название задачи</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Название задачи"
+        [(ngModel)]="newTaskTitle"
+        (keyup.enter)="addTaskHandler()"
+      />
+    </mat-form-field>
+    <button class="button button--add" (click)="addTaskHandler()" [disabled]="!newTaskTitle.trim()">Добавить</button>
   </div>
 
 </div>

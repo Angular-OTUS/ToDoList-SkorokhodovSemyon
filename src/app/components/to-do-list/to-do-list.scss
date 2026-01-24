@@ -20,34 +20,23 @@
   display: flex;
   gap: 10px;
   padding-top: 10px;
+  align-items: flex-start;
 
-  &__input {
+  &__input-field {
     flex-grow: 1;
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1rem;
 
-    &:focus {
-      outline: none;
-      border-color: var(--primary-button-color);
+    .mdc-text-field {
+      padding-bottom: 0;
     }
   }
 
-  &__button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--primary-button-color);
-    color: var(--primary-button-text);
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  .button--add {
+    height: 56px;
 
-    &:hover {
-      background-color: color.adjust(v.$primary-button-color, $lightness: -10%);
+    &:disabled {
+      opacity: 0.5;
     }
+
   }
 }
 
@@ -55,41 +44,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   &__empty-message {
     text-align: center;
     color: #888;
-  }
-}
-
-.task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9f9f9;
-  padding: 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-
-  &:not(:last-child) {
-    margin-bottom: 10px;
-  }
-
-  &__text {
-    color: var(--text-color);
-  }
-
-  &__delete-button {
-    padding: 5px 15px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: #f1f1f1;
-      border-color: #bbb;
-    }
   }
 }
