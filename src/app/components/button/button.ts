@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 /**
  * Возможный тип кнопок
@@ -20,17 +20,25 @@ export class Button {
   /**
    * Наименование текста в кнопке
    */
-  title = input.required<string>()
+  title = input.required<string>();
 
   /**
    * Заблокирована ли сейчас кнопка
    */
-  disabled = input<boolean>()
+  disabled = input<boolean>();
 
   /**
    * Тип кнопки
    */
-  typeButton = input<ButtonType>("default")
+  typeButton = input<ButtonType>("default");
+
+  //endregion
+  //region Output
+
+  /**
+   * Прокси для передачи клика по кнопке
+   */
+  onClickHandler = output<MouseEvent>();
 
   //endregion
 }

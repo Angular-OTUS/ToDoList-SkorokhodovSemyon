@@ -46,7 +46,7 @@ export class ToDoList implements OnInit {
   /**
    * Список тасок
    */
-  public taskList: Signal<ToDoTask[]> = this.toDoListService.getTaskList()
+  public taskList: Signal<ToDoTask[]> = this.toDoListService.getTaskList();
 
   //endregion
   //region Hooks
@@ -55,7 +55,7 @@ export class ToDoList implements OnInit {
 
     setTimeout(() => {
       this.isLoading.set(false);
-    }, 500)
+    }, 500);
   }
 
   //endregion
@@ -82,7 +82,7 @@ export class ToDoList implements OnInit {
    */
   removeTaskHandler(id: string) {
 
-    this.toDoListService.deleteTask(id)
+    this.toDoListService.deleteTask(id);
   }
 
   //endregion

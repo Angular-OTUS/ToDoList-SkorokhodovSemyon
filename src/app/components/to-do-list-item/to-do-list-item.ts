@@ -10,7 +10,7 @@ import { Button } from 'src/app/components/button/button';
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.scss',
   imports: [
-    Button
+    Button,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
