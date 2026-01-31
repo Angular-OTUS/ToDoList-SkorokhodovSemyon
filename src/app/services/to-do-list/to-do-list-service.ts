@@ -31,7 +31,7 @@ export class ToDoListService {
 
     const newTask: ToDoTask = {
       id: Date.now().toString(),
-      title: title
+      title: title,
     };
 
     this.store.tasks.update(currentTasks => [...currentTasks, newTask]);

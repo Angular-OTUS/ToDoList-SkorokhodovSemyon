@@ -1,0 +1,7 @@
+<button
+  class="button button--{{ typeButton() }}"
+  [disabled]="disabled()"
+  (click)="onClickHandler.emit($event)"
+>
+  {{ title() }}
+</button>

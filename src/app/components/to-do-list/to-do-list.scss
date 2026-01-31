@@ -29,15 +29,6 @@
       padding-bottom: 0;
     }
   }
-
-  .button--add {
-    height: 56px;
-
-    &:disabled {
-      opacity: 0.5;
-    }
-
-  }
 }
 
 .task-list {
@@ -52,4 +43,10 @@
     text-align: center;
     color: #888;
   }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

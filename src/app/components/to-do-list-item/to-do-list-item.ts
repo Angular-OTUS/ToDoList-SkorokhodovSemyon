@@ -1,10 +1,17 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ToDoTask } from 'src/app/models/to-do-task';
+import { Button } from 'src/app/components/button/button';
 
+/**
+ * Компонент позиции в списке
+ */
 @Component({
   selector: 'app-to-do-list-item',
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.scss',
+  imports: [
+    Button,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToDoListItem {
