@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use 'styles/variables' as v;
 @use 'styles/buttons';
+@use 'styles/tooltip';
 
 html {
   height: 100%;

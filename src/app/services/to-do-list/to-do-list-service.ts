@@ -25,14 +25,14 @@ export class ToDoListService {
   /**
    * Добавляет новую таску в хранилище.
    *
-   * @param title - Название новой таски.
+   * @param task - Новая таска.
    */
-  addTask(title: string): void {
+  addTask(task: ToDoTask): void {
 
     const newTask: ToDoTask = {
+      ...task,
       id: Date.now().toString(),
-      title: title,
-    };
+    }
 
     this.store.tasks.update(currentTasks => [...currentTasks, newTask]);
   }

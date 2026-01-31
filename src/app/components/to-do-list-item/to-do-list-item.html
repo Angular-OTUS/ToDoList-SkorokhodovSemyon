@@ -1,8 +1,9 @@
 <li class="task-item">
   <span class="task-item__text">{{ item().title }}</span>
   <app-button
+    appTooltip="Удалить задачу {{ item().title }}"
     [title]="'Удалить'"
     [typeButton]="'delete'"
-    (onClickHandler)="onRemove()"
+    (onClickHandler)="onRemove($event)"
   ></app-button>
 </li>
