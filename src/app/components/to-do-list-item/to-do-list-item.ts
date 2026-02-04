@@ -14,7 +14,7 @@ import { TooltipDirective } from 'src/app/components/directives/tooltip.directiv
     Button,
     TooltipDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListItem {
   //region Input
@@ -33,16 +33,30 @@ export class ToDoListItem {
    */
   remove = output<string>();
 
+  /**
+   * Событие, при выборе таски
+   */
+  select = output<ToDoTask>();
+
   //endregion
   //region Handler
 
   /**
    * Обработчик клика по кнопке удаления.
    */
-  onRemove(event: MouseEvent): void {
+  removeTodo(event: MouseEvent): void {
 
     event.stopPropagation();
     this.remove.emit(this.item().id!);
+  }
+
+  selectTodo(event: Event) {
+
+    const target = event.target as HTMLElement;
+    if (!target.closest('app-button')) {
+
+      this.select.emit(this.item());
+    }
   }
 
   //endregion

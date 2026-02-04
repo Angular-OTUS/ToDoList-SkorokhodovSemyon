@@ -1,9 +1,18 @@
-<li class="task-item">
+<li
+  class="task-item"
+  (click)="selectTodo($event)"
+  (keydown.enter)="selectTodo($event)"
+  (keydown.space)="selectTodo($event)"
+  appTooltip="Кликни, чтобы показать описание задачи"
+  #itemTip="appTooltip"
+>
   <span class="task-item__text">{{ item().title }}</span>
   <app-button
     appTooltip="Удалить задачу {{ item().title }}"
     [title]="'Удалить'"
     [typeButton]="'delete'"
-    (onClickHandler)="onRemove($event)"
+    (clickHandler)="removeTodo($event)"
+    (mouseenter)="itemTip.hide()"
+    (mouseleave)="itemTip.show()"
   ></app-button>
 </li>

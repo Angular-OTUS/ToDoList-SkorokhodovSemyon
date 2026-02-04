@@ -1,4 +1,4 @@
-import { Injectable, Signal } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
 import { ToDoTask } from 'src/app/models/to-do-task';
 
@@ -9,15 +9,12 @@ import { ToDoTask } from 'src/app/models/to-do-task';
   providedIn: 'root',
 })
 export class ToDoListService {
-  //region Ctor
+  //region Injected services
 
   /**
-   * Конструктор
-   *
-   * @param store хранилище тасок
+   * Хранилище
    */
-  constructor(private store: ToDoListStore) {
-  }
+  private readonly store = inject(ToDoListStore)
 
   //endregion
   //region Public
@@ -53,7 +50,7 @@ export class ToDoListService {
   deleteTask(id: string): void {
 
     this.store.tasks.update(currentTasks =>
-      currentTasks.filter(task => task.id !== id)
+      currentTasks.filter(task => task.id !== id),
     );
   }
 

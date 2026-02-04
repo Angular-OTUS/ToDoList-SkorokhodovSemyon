@@ -38,7 +38,7 @@ export class Button {
   /**
    * Прокси для передачи клика по кнопке
    */
-  onClickHandler = output<MouseEvent>();
+  clickHandler = output<MouseEvent>();
 
   //endregion
 }

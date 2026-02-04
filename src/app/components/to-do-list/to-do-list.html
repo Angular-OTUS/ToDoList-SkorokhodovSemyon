@@ -9,11 +9,10 @@
           @for (task of taskList(); track task.id) {
             <app-to-do-list-item
               class="task-list__item"
-              appTooltip="Кликни, чтобы показать описание задачи"
               [item]="task"
-              (click)="selectTaskHandler(task)"
-              (remove)="removeTaskHandler($event)"
               [class.selected]="selectedTask()?.id === task.id"
+              (select)="selectTaskHandler($event)"
+              (remove)="removeTaskHandler($event)"
             >
             </app-to-do-list-item>
           } @empty {
@@ -32,7 +31,8 @@
             matInput
             type="text"
             placeholder="Название задачи"
-            [(ngModel)]="newTaskTitle"
+            [ngModel]="newTaskTitle()"
+            (ngModelChange)="newTaskTitle.set($event)"
           />
         </mat-form-field>
 
@@ -42,13 +42,14 @@
             matInput
             rows="4"
             placeholder="Описание задачи"
-            [(ngModel)]="newTaskDescription"
+            [ngModel]="newTaskDescription()"
+            (ngModelChange)="newTaskDescription.set($event)"
           ></textarea>
         </mat-form-field>
         <app-button
           appTooltip="Добавить задачу"
           (click)="addTaskHandler()"
-          [disabled]="!newTaskTitle.trim() || !newTaskDescription.trim()"
+          [disabled]="!newTaskTitle().trim() || !newTaskDescription().trim()"
           [title]="'Добавить'"
           [typeButton]="'add'"
         >
@@ -59,7 +60,7 @@
     @if (selectedTask() !== null) {
       <div class="todo-card__description-wrapper">
         <div class="description-content">
-          <h2 class="description-content_">Описание задачи</h2>
+          <h2>Описание задачи</h2>
           <p class="description-content__text">
             {{ selectedTask()!.description }}
           </p>

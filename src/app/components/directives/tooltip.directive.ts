@@ -15,6 +15,7 @@ import {
  */
 @Directive({
   selector: '[appTooltip]',
+  exportAs: 'appTooltip',
   host: {
     '(mouseenter)': 'show()',
     '(mouseleave)': 'hide()',

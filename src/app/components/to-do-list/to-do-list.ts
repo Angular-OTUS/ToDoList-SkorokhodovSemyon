@@ -25,7 +25,7 @@ import { TooltipDirective } from 'src/app/components/directives/tooltip.directiv
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements OnInit {
   //region Fields
@@ -38,12 +38,12 @@ export class ToDoList implements OnInit {
   /**
    * Поле для хранения названия новой таски из Input
    */
-  public newTaskTitle: string = '';
+  readonly newTaskTitle = signal<string>('');
 
   /**
    * Поле для хранения описания новой таски из Input
    */
-  public newTaskDescription: string = '';
+  readonly newTaskDescription = signal<string>('');
 
   /**
    * Происходит ли загрузка данных
@@ -78,18 +78,18 @@ export class ToDoList implements OnInit {
    */
   addTaskHandler() {
 
-    if (!this.newTaskTitle.trim() || !this.newTaskDescription.trim()) {
+    if (!this.newTaskTitle().trim() || !this.newTaskDescription().trim()) {
 
       return;
     }
 
-    let newTask: ToDoTask = {
-      title: this.newTaskTitle,
-      description: this.newTaskDescription,
-    }
-    this.toDoListService.addTask(newTask);
-    this.newTaskTitle = '';
-    this.newTaskDescription = '';
+    this.toDoListService.addTask(
+      {
+        title: this.newTaskTitle(),
+        description: this.newTaskDescription(),
+      });
+    this.newTaskTitle.set('');
+    this.newTaskDescription.set('');
   }
 
   /**
