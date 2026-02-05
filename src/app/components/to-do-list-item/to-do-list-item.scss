@@ -13,3 +13,7 @@
     color: var(--text-color);
   }
 }
+:host(.selected) .task-item {
+  background-color: #e8eaf6;
+  border-color: v.$primary-button-color;
+}

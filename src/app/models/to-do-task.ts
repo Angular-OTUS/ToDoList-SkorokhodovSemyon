@@ -7,12 +7,17 @@ export interface ToDoTask {
   /**
    * Идентификатор таски
    */
-  readonly id: string;
+  readonly id?: string;
 
   /**
    * Название таски
    */
   readonly title: string;
+
+  /**
+   * Описание задачи
+   */
+  readonly description: string;
 
   //endregion
 }

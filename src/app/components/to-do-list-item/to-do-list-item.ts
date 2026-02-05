@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ToDoTask } from 'src/app/models/to-do-task';
 import { Button } from 'src/app/components/button/button';
+import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 
 /**
  * Компонент позиции в списке
@@ -11,8 +12,9 @@ import { Button } from 'src/app/components/button/button';
   styleUrl: './to-do-list-item.scss',
   imports: [
     Button,
+    TooltipDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListItem {
   //region Input
@@ -31,15 +33,30 @@ export class ToDoListItem {
    */
   remove = output<string>();
 
+  /**
+   * Событие, при выборе таски
+   */
+  select = output<ToDoTask>();
+
   //endregion
   //region Handler
 
   /**
    * Обработчик клика по кнопке удаления.
    */
-  onRemove(): void {
+  removeTodo(event: MouseEvent): void {
 
-    this.remove.emit(this.item().id);
+    event.stopPropagation();
+    this.remove.emit(this.item().id!);
+  }
+
+  /**
+   * Обработчик клика по списку листа
+   */
+  selectTodo(event: Event) {
+
+    event.stopPropagation();
+    this.select.emit(this.item());
   }
 
   //endregion
