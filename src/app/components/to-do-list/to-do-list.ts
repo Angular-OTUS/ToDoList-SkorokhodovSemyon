@@ -131,5 +131,14 @@ export class ToDoList implements OnInit {
     this.selectedTask.set(task);
   }
 
+  /**
+   * Обновляет задачу
+   */
+  updateTaskHandler(updatedTask: ToDoTask) {
+
+    this.toDoListService.updateTask(updatedTask);
+    this.toastService.showToast('Задача обновлена', 'success');
+  }
+
   //endregion
 }
