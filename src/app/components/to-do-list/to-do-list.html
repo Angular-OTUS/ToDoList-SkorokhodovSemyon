@@ -13,6 +13,7 @@
               [class.selected]="selectedTask()?.id === task.id"
               (select)="selectTaskHandler($event)"
               (remove)="removeTaskHandler($event)"
+              (update)="updateTaskHandler($event)"
             >
             </app-to-do-list-item>
           } @empty {

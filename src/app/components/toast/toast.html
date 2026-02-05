@@ -1,0 +1,20 @@
+<div class="toasts-container">
+  @for (toast of toasts(); track toast.id) {
+    <div
+      class="toast-item"
+      [class.toast-item--success]="toast.type === 'success'"
+      [class.toast-item--error]="toast.type === 'error'"
+      [class.toast-item--info]="toast.type === 'info'"
+      [class.toast-item--warning]="toast.type === 'warning'"
+    >
+      <span class="toast-item__message">{{ toast.message }}</span>
+      <button
+        class="toast-item__close-btn"
+        (click)="removeToast(toast.id)"
+        aria-label="Закрыть уведомление"
+      >
+        ✕
+      </button>
+    </div>
+  }
+</div>

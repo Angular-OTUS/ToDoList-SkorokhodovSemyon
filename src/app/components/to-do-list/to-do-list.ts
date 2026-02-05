@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
+import { ToastService } from 'src/app/services/toast/toast-service';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -34,6 +35,11 @@ export class ToDoList implements OnInit {
    * Сервис для работы с тасками
    */
   readonly toDoListService = inject(ToDoListService);
+
+  /**
+   * Сервис для работы с уведомлениями
+   */
+  readonly toastService: ToastService = inject(ToastService);
 
   /**
    * Поле для хранения названия новой таски из Input
@@ -83,6 +89,8 @@ export class ToDoList implements OnInit {
       return;
     }
 
+    const title = this.newTaskTitle();
+
     this.toDoListService.addTask(
       {
         title: this.newTaskTitle(),
@@ -90,6 +98,7 @@ export class ToDoList implements OnInit {
       });
     this.newTaskTitle.set('');
     this.newTaskDescription.set('');
+    this.toastService.showToast(`Задача "${title}" успешно добавлена`, 'success');
   }
 
   /**
@@ -99,12 +108,17 @@ export class ToDoList implements OnInit {
    */
   removeTaskHandler(id: string) {
 
+    const task = this.taskList().find(t => t.id === id);
+    const taskTitle = task?.title || 'Задача';
+
     if (this.selectedTask()?.id === id) {
 
       this.selectedTask.set(null);
     }
 
     this.toDoListService.deleteTask(id);
+
+    this.toastService.showToast(`Задача "${taskTitle}" успешно удалена`, 'success');
   }
 
   /**
@@ -115,6 +129,15 @@ export class ToDoList implements OnInit {
   selectTaskHandler(task: ToDoTask) {
 
     this.selectedTask.set(task);
+  }
+
+  /**
+   * Обновляет задачу
+   */
+  updateTaskHandler(updatedTask: ToDoTask) {
+
+    this.toDoListService.updateTask(updatedTask);
+    this.toastService.showToast('Задача обновлена', 'success');
   }
 
   //endregion

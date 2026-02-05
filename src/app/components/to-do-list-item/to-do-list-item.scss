@@ -8,12 +8,36 @@
   padding: 15px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
+  min-height: 70px;
 
   &__text {
     color: var(--text-color);
   }
+
+  &__edit-mode {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  &__input {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 5px;
+  }
+
 }
 :host(.selected) .task-item {
   background-color: #e8eaf6;
   border-color: v.$primary-button-color;
+}
+.task-item.editing {
+  background-color: white;
+  border-color: v.$primary-button-color;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: default;
 }
