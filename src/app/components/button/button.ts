@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 /**
  * Возможный тип кнопок
@@ -10,9 +10,9 @@ type ButtonType = 'add' | 'delete' | 'default';
  */
 @Component({
   selector: 'app-button',
-  imports: [],
   templateUrl: './button.html',
   styleUrl: './button.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Button {
   //region Input

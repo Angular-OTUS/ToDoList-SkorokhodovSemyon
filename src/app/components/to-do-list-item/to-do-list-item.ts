@@ -50,13 +50,13 @@ export class ToDoListItem {
     this.remove.emit(this.item().id!);
   }
 
+  /**
+   * Обработчик клика по списку листа
+   */
   selectTodo(event: Event) {
 
-    const target = event.target as HTMLElement;
-    if (!target.closest('app-button')) {
-
-      this.select.emit(this.item());
-    }
+    event.stopPropagation();
+    this.select.emit(this.item());
   }
 
   //endregion
