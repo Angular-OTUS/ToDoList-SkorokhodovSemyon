@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, input, output, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  signal, viewChild,
+  ViewChild
+} from '@angular/core';
 import { ToDoTask } from 'src/app/models/to-do-task';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
@@ -23,6 +32,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class ToDoListItem {
   //region Fields
+
+  /**
+   * Ссылка на инпут элемент
+   */
+  readonly titleInput = viewChild<ElementRef<HTMLInputElement>>('titleInput');
 
   /**
    * Режим редактирования
@@ -60,6 +74,21 @@ export class ToDoListItem {
    * Событие обновления задачи
    */
   readonly update = output<ToDoTask>();
+
+  //endregion
+  //region Ctor
+
+  constructor() {
+
+    effect(() => {
+
+      if (this.isEditing() && this.titleInput()) {
+
+        const el = this.titleInput()!.nativeElement;
+        el.focus();
+      }
+    });
+  }
 
   //endregion
   //region Handler
