@@ -22,27 +22,24 @@
 
       <div class="task-item__actions">
         <app-button
-          [title]="'Сохранить'"
           [typeButton]="'add'"
           (clickHandler)="saveTitle($event)"
-        ></app-button>
+        >Сохранить</app-button>
 
         <app-button
-          [title]="'Отменить'"
           [typeButton]="'delete'"
           (clickHandler)="cancelEdit($event)"
-        ></app-button>
+        >Отменить</app-button>
       </div>
     </div>
   } @else {
     <span class="task-item__text">{{ item().title }}</span>
     <app-button
       appTooltip="Удалить задачу {{ item().title }}"
-      [title]="'Удалить'"
       [typeButton]="'delete'"
       (clickHandler)="removeTodo($event)"
       (mouseenter)="itemTip.hide()"
       (mouseleave)="itemTip.show()"
-    ></app-button>
+    >Удалить</app-button>
   }
 </li>

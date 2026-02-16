@@ -3,5 +3,5 @@
   [disabled]="disabled()"
   (click)="clickHandler.emit($event)"
 >
-  {{ title() }}
+  <ng-content></ng-content>
 </button>
