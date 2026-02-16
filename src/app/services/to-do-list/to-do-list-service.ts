@@ -54,6 +54,20 @@ export class ToDoListService {
     );
   }
 
+  /**
+   * Обновляет задачу
+   *
+   * @param updatedTask обновленная задача
+   */
+  updateTask(updatedTask: ToDoTask): void {
+
+    this.store.tasks.update(currentTasks =>
+      currentTasks.map(task =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  }
+
   //endregion
 
 }

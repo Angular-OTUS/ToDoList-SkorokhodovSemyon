@@ -1,0 +1,82 @@
+@use 'sass:color';
+@use 'variables' as v;
+
+.toasts-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.toast-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px v.$shadow-color;
+  background-color: v.$primary-button-color;
+  color: v.$white-color;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  pointer-events: auto;
+  animation: slideIn 0.3s ease-out;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  &:hover {
+    transform: translateX(-4px);
+  }
+
+  &--success {
+    background-color: v.$green-color;
+  }
+
+  &--error {
+    background-color: v.$red-color;
+  }
+
+  &--info {
+    background-color: v.$primary-button-color;
+  }
+
+  &--warning {
+    background-color: #ff9800;
+  }
+
+  &__message {
+    flex: 1;
+    word-break: break-word;
+  }
+
+  &__close-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: v.$white-color;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

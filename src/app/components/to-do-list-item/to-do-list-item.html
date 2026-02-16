@@ -3,16 +3,46 @@
   (click)="selectTodo($event)"
   (keydown.enter)="selectTodo($event)"
   (keydown.space)="selectTodo($event)"
-  appTooltip="Кликни, чтобы показать описание задачи"
+  (dblclick)="enableEditMode($event)"
+  appTooltip="Дважды кликни для редактирования, один раз для просмотра"
   #itemTip="appTooltip"
 >
-  <span class="task-item__text">{{ item().title }}</span>
-  <app-button
-    appTooltip="Удалить задачу {{ item().title }}"
-    [title]="'Удалить'"
-    [typeButton]="'delete'"
-    (clickHandler)="removeTodo($event)"
-    (mouseenter)="itemTip.hide()"
-    (mouseleave)="itemTip.show()"
-  ></app-button>
+  @if (isEditing()) {
+    <div class="task-item__edit-mode" (click)="$event.stopPropagation()">
+      <mat-form-field appearance="outline" class="task-item__input">
+        <input
+          matInput
+          #titleInput
+          [ngModel]="editedTitle()"
+          (ngModelChange)="editedTitle.set($event)"
+          (keydown.enter)="saveTitle($event)"
+          (keydown.escape)="cancelEdit($event)"
+        />
+      </mat-form-field>
+
+      <div class="task-item__actions">
+        <app-button
+          [title]="'Сохранить'"
+          [typeButton]="'add'"
+          (clickHandler)="saveTitle($event)"
+        ></app-button>
+
+        <app-button
+          [title]="'Отменить'"
+          [typeButton]="'delete'"
+          (clickHandler)="cancelEdit($event)"
+        ></app-button>
+      </div>
+    </div>
+  } @else {
+    <span class="task-item__text">{{ item().title }}</span>
+    <app-button
+      appTooltip="Удалить задачу {{ item().title }}"
+      [title]="'Удалить'"
+      [typeButton]="'delete'"
+      (clickHandler)="removeTodo($event)"
+      (mouseenter)="itemTip.hide()"
+      (mouseleave)="itemTip.show()"
+    ></app-button>
+  }
 </li>
