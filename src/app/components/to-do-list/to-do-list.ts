@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
-import { ToDoTask } from 'src/app/models/to-do-task';
+import { TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
 import { ToDoListItem } from 'src/app/components/to-do-list-item/to-do-list-item';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 import { ToastService } from 'src/app/services/toast/toast-service';
 import { Spinner } from 'src/app/components/spinner/spinner';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -21,10 +21,11 @@ import { Spinner } from 'src/app/components/spinner/spinner';
     ToDoListItem,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinner,
     Button,
     TooltipDirective,
     Spinner,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -67,6 +68,22 @@ export class ToDoList implements OnInit {
    * Выбранная таска для отображения описания
    */
   readonly selectedTask = signal<ToDoTask | null>(null);
+
+  /**
+   * Выбранный фильтр: null = ALL
+   */
+  readonly statusFilter = signal<TaskStatus | null>(null);
+
+  /**
+   * Отфильтрованный список для отображения
+   */
+  readonly filteredTaskList: Signal<ToDoTask[]> = computed(() => {
+
+    const filter = this.statusFilter();
+    const tasks = this.taskList();
+
+    return filter === null ? tasks : tasks.filter(t => t.status === filter);
+  });
 
   //endregion
   //region Hooks

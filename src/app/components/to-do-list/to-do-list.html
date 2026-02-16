@@ -5,8 +5,21 @@
 
     <div class="todo-card__list-wrapper">
       @if (!isLoading()) {
+        @if (taskList().length > 0) {
+          <mat-form-field appearance="outline" class="add-form__input-field">
+            <mat-label>Фильтр по статусу</mat-label>
+            <mat-select
+              [ngModel]="statusFilter()"
+              (ngModelChange)="statusFilter.set($event)"
+            >
+              <mat-option [value]="null">Все</mat-option>
+              <mat-option [value]="'InProgress'">В процессе</mat-option>
+              <mat-option [value]="'Completed'">Выполнены</mat-option>
+            </mat-select>
+          </mat-form-field>
+        }
         <ul class="task-list">
-          @for (task of taskList(); track task.id) {
+          @for (task of filteredTaskList(); track task.id) {
             <app-to-do-list-item
               class="task-list__item"
               [item]="task"
