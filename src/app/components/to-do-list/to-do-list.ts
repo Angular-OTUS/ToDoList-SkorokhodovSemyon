@@ -5,11 +5,10 @@ import { TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
 import { ToDoListItem } from 'src/app/components/to-do-list-item/to-do-list-item';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Button } from 'src/app/components/button/button';
-import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 import { ToastService } from 'src/app/services/toast/toast-service';
 import { Spinner } from 'src/app/components/spinner/spinner';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-do-item';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -21,11 +20,10 @@ import { MatOption, MatSelect } from '@angular/material/select';
     ToDoListItem,
     MatFormFieldModule,
     MatInputModule,
-    Button,
-    TooltipDirective,
     Spinner,
     MatSelect,
     MatOption,
+    CreateToDoItem,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -43,16 +41,6 @@ export class ToDoList implements OnInit {
    * Сервис для работы с уведомлениями
    */
   readonly toastService: ToastService = inject(ToastService);
-
-  /**
-   * Поле для хранения названия новой таски из Input
-   */
-  readonly newTaskTitle = signal<string>('');
-
-  /**
-   * Поле для хранения описания новой таски из Input
-   */
-  readonly newTaskDescription = signal<string>('');
 
   /**
    * Происходит ли загрузка данных
@@ -101,23 +89,14 @@ export class ToDoList implements OnInit {
   /**
    * Добавляет новую таску
    */
-  addTaskHandler() {
+  addTaskHandler(payload: ToDoTask) {
 
-    if (!this.newTaskTitle().trim() || !this.newTaskDescription().trim()) {
+    this.toDoListService.addTask({
+      title: payload.title,
+      description: payload.description,
+    });
 
-      return;
-    }
-
-    const title = this.newTaskTitle();
-
-    this.toDoListService.addTask(
-      {
-        title: this.newTaskTitle(),
-        description: this.newTaskDescription(),
-      });
-    this.newTaskTitle.set('');
-    this.newTaskDescription.set('');
-    this.toastService.showToast(`Задача "${title}" успешно добавлена`, 'success');
+    this.toastService.showToast(`Задача "${payload.title}" успешно добавлена`, 'success');
   }
 
   /**

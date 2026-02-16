@@ -38,37 +38,10 @@
           <app-spinner></app-spinner>
         </div>
       }
-      <div class="add-form">
-        <mat-form-field class="add-form__input-field" appearance="outline">
-          <mat-label>Название задачи</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Название задачи"
-            [ngModel]="newTaskTitle()"
-            (ngModelChange)="newTaskTitle.set($event)"
-          />
-        </mat-form-field>
-
-        <mat-form-field class="add-form__input-field" appearance="outline">
-          <mat-label>Описание задачи</mat-label>
-          <textarea
-            matInput
-            rows="4"
-            placeholder="Описание задачи"
-            [ngModel]="newTaskDescription()"
-            (ngModelChange)="newTaskDescription.set($event)"
-          ></textarea>
-        </mat-form-field>
-        <app-button
-          appTooltip="Добавить задачу"
-          (click)="addTaskHandler()"
-          [disabled]="!newTaskTitle().trim() || !newTaskDescription().trim()"
-          [typeButton]="'add'"
-        >
-          Добавить
-        </app-button>
-      </div>
+      <app-create-to-do-item
+        (createTask)="addTaskHandler($event)"
+      >
+      </app-create-to-do-item>
     </div>
 
     @if (selectedTask() !== null) {

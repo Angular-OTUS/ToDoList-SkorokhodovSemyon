@@ -1,0 +1,32 @@
+<div class="add-form">
+  <mat-form-field class="add-form__input-field" appearance="outline">
+    <mat-label>Название задачи</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Название задачи"
+      [ngModel]="newTaskTitle()"
+      (ngModelChange)="newTaskTitle.set($event)"
+    />
+  </mat-form-field>
+
+  <mat-form-field class="add-form__input-field" appearance="outline">
+    <mat-label>Описание задачи</mat-label>
+    <textarea
+      matInput
+      rows="4"
+      placeholder="Описание задачи"
+      [ngModel]="newTaskDescription()"
+      (ngModelChange)="newTaskDescription.set($event)"
+    ></textarea>
+  </mat-form-field>
+
+  <app-button
+    appTooltip="Добавить задачу"
+    (clickHandler)="addTaskHandler()"
+    [disabled]="!newTaskTitle().trim() || !newTaskDescription().trim()"
+    [typeButton]="'add'"
+  >
+    Добавить
+  </app-button>
+</div>
