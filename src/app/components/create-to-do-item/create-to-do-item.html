@@ -1,13 +1,16 @@
-<div class="add-form">
+<form [formGroup]="form" class="add-form" (ngSubmit)="addTaskHandler()">
+
   <mat-form-field class="add-form__input-field" appearance="outline">
     <mat-label>Название задачи</mat-label>
     <input
       matInput
       type="text"
       placeholder="Название задачи"
-      [ngModel]="newTaskTitle()"
-      (ngModelChange)="newTaskTitle.set($event)"
+      formControlName="title"
     />
+    @if (form.controls.title.hasError('required')) {
+      <mat-error>Название обязательно</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="add-form__input-field" appearance="outline">
@@ -16,17 +19,19 @@
       matInput
       rows="4"
       placeholder="Описание задачи"
-      [ngModel]="newTaskDescription()"
-      (ngModelChange)="newTaskDescription.set($event)"
+      formControlName="description"
     ></textarea>
+    @if (form.controls.description.hasError('required')) {
+      <mat-error>Описание обязательно</mat-error>
+    }
   </mat-form-field>
 
   <app-button
     appTooltip="Добавить задачу"
     (clickHandler)="addTaskHandler()"
-    [disabled]="!newTaskTitle().trim() || !newTaskDescription().trim()"
+    [disabled]="form.invalid"
     [typeButton]="'add'"
   >
     Добавить
   </app-button>
-</div>
+</form>
