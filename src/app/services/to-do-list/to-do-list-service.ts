@@ -25,6 +25,9 @@ export class ToDoListService {
   //endregion
   //region Public
 
+  /**
+   * Загружает таски из БД
+   */
   loadTasks(): void {
 
     this.apiService.getAllTasks().subscribe(tasks => {
