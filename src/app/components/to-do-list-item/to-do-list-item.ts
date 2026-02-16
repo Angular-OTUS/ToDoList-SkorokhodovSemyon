@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   effect,
@@ -82,12 +83,13 @@ export class ToDoListItem {
 
     effect(() => {
 
-      if (this.isEditing() && this.titleInput()) {
+      if (!this.isEditing()) return;
 
-        const el = this.titleInput()!.nativeElement;
-        el.focus();
-      }
+      afterNextRender(() => {
+        this.titleInput()?.nativeElement.focus();
+      });
     });
+
   }
 
   //endregion
