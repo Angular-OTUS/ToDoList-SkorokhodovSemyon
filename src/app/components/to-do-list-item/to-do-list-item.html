@@ -33,6 +33,12 @@
       </div>
     </div>
   } @else {
+    <mat-checkbox
+      [checked]="item().status === 'Completed'"
+      (change)="toggleStatus($event)"
+      (click)="$event.stopPropagation()"
+      color="primary"
+    ></mat-checkbox>
     <span class="task-item__text">{{ item().title }}</span>
     <app-button
       appTooltip="Удалить задачу {{ item().title }}"

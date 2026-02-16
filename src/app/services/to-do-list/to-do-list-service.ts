@@ -29,6 +29,7 @@ export class ToDoListService {
     const newTask: ToDoTask = {
       ...task,
       id: Date.now().toString(),
+      status: task.status || 'InProgress',
     }
 
     this.store.tasks.update(currentTasks => [...currentTasks, newTask]);

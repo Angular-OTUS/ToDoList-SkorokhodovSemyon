@@ -9,11 +9,12 @@ import {
   signal, viewChild,
   ViewChild
 } from '@angular/core';
-import { ToDoTask } from 'src/app/models/to-do-task';
+import { TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 import { MatFormField, MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 
 /**
  * Компонент позиции в списке
@@ -28,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     MatFormField,
     MatInput,
     FormsModule,
+    MatCheckbox,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,11 +85,11 @@ export class ToDoListItem {
 
     effect(() => {
 
-      if (!this.isEditing()) return;
+      if (this.isEditing() && this.titleInput()) {
 
-      afterNextRender(() => {
-        this.titleInput()?.nativeElement.focus();
-      });
+        const el = this.titleInput()!.nativeElement;
+        el.focus();
+      }
     });
 
   }
@@ -149,6 +151,21 @@ export class ToDoListItem {
 
     event?.stopPropagation();
     this.isEditing.set(false);
+  }
+
+  /**
+   * Переключает статус задачи
+   */
+  toggleStatus(event: MatCheckboxChange): void {
+
+    const newStatus: TaskStatus = this.item().status === 'Completed'
+      ? 'InProgress'
+      : 'Completed';
+
+    this.update.emit({
+      ...this.item(),
+      status: newStatus
+    });
   }
 
   //endregion

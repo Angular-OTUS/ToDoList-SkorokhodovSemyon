@@ -9,6 +9,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 import { ToastService } from 'src/app/services/toast/toast-service';
+import { Spinner } from 'src/app/components/spinner/spinner';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -23,6 +24,7 @@ import { ToastService } from 'src/app/services/toast/toast-service';
     MatProgressSpinner,
     Button,
     TooltipDirective,
+    Spinner,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
