@@ -78,6 +78,7 @@ export class ToDoList implements OnInit {
 
   ngOnInit() {
 
+    this.toDoListService.loadTasks();
     setTimeout(() => {
       this.isLoading.set(false);
     }, 500);

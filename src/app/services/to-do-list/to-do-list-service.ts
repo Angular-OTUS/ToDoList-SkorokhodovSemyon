@@ -1,6 +1,7 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
 import { ToDoTask } from 'src/app/models/to-do-task';
+import { ApiService } from 'src/app/services/api/api-service';
 
 /**
  * Сервис для работы с тасками
@@ -16,8 +17,20 @@ export class ToDoListService {
    */
   private readonly store = inject(ToDoListStore)
 
+  /**
+   * Сервис для работы с Апи
+   */
+  private readonly apiService = inject(ApiService);
+
   //endregion
   //region Public
+
+  loadTasks(): void {
+
+    this.apiService.getAllTasks().subscribe(tasks => {
+      this.store.tasks.set(tasks);
+    });
+  }
 
   /**
    * Добавляет новую таску в хранилище.
@@ -32,7 +45,9 @@ export class ToDoListService {
       status: task.status || 'InProgress',
     }
 
-    this.store.tasks.update(currentTasks => [...currentTasks, newTask]);
+    this.apiService.createTask(newTask).subscribe(createdTask => {
+      this.store.tasks.update(current => [...current, createdTask]);
+    });
   }
 
   /**
@@ -50,9 +65,9 @@ export class ToDoListService {
    */
   deleteTask(id: string): void {
 
-    this.store.tasks.update(currentTasks =>
-      currentTasks.filter(task => task.id !== id),
-    );
+    this.apiService.deleteTask(id).subscribe(() => {
+      this.store.tasks.update(current => current.filter(t => t.id !== id));
+    });
   }
 
   /**
@@ -62,11 +77,11 @@ export class ToDoListService {
    */
   updateTask(updatedTask: ToDoTask): void {
 
-    this.store.tasks.update(currentTasks =>
-      currentTasks.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
-    );
+    this.apiService.updateTask(updatedTask).subscribe(savedTask => {
+      this.store.tasks.update(current =>
+        current.map(t => t.id === savedTask.id ? savedTask : t)
+      );
+    });
   }
 
   //endregion
