@@ -69,7 +69,6 @@ export class CreateToDoItem {
       description: formValue.description,
     });
 
-    //TODO Форма не сбрасывается и показываются ошибки после добавления задачи
     this.formDirective().resetForm();
     this.form.reset();
     this.form.markAsUntouched();
