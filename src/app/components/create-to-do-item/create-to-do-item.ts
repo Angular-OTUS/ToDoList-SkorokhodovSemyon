@@ -39,6 +39,9 @@ export class CreateToDoItem {
     description: ['', [Validators.required]],
   });
 
+  /**
+   * Ссылка на инпут форму
+   */
   readonly formDirective = viewChild.required(FormGroupDirective);
 
   //endregion
