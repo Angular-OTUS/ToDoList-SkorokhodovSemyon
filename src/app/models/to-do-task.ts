@@ -1,4 +1,9 @@
 /**
+ * Возможные статусы задачи
+ */
+export type TaskStatus = 'InProgress' | 'Completed';
+
+/**
  * Интерфейс, описывающий модель таски
  */
 export interface ToDoTask {
@@ -18,6 +23,11 @@ export interface ToDoTask {
    * Описание задачи
    */
   readonly description: string;
+
+  /**
+   * Статус задачи
+   */
+  readonly status?: TaskStatus;
 
   //endregion
 }

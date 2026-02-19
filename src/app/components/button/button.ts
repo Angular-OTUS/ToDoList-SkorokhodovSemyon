@@ -18,11 +18,6 @@ export class Button {
   //region Input
 
   /**
-   * Наименование текста в кнопке
-   */
-  title = input.required<string>();
-
-  /**
    * Заблокирована ли сейчас кнопка
    */
   disabled = input<boolean>();

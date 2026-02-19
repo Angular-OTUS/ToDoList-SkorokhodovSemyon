@@ -1,0 +1,36 @@
+<form [formGroup]="form" class="add-form" (ngSubmit)="addTaskHandler()">
+
+  <mat-form-field class="add-form__input-field" appearance="outline">
+    <mat-label>Название задачи</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Название задачи"
+      formControlName="title"
+    />
+    @if (form.controls.title.hasError('required')) {
+      <mat-error>Название обязательно</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="add-form__input-field" appearance="outline">
+    <mat-label>Описание задачи</mat-label>
+    <textarea
+      matInput
+      rows="4"
+      placeholder="Описание задачи"
+      formControlName="description"
+    ></textarea>
+    @if (form.controls.description.hasError('required')) {
+      <mat-error>Описание обязательно</mat-error>
+    }
+  </mat-form-field>
+
+  <app-button
+    appTooltip="Добавить задачу"
+    [disabled]="form.invalid"
+    [typeButton]="'add'"
+  >
+    Добавить
+  </app-button>
+</form>
