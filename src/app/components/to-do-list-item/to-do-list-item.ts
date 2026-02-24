@@ -69,11 +69,6 @@ export class ToDoListItem {
   readonly remove = output<string>();
 
   /**
-   * Событие, при выборе таски
-   */
-  readonly select = output<ToDoTask>();
-
-  /**
    * Событие обновления задачи
    */
   readonly update = output<ToDoTask>();
@@ -104,15 +99,6 @@ export class ToDoListItem {
 
     event.stopPropagation();
     this.remove.emit(this.item().id!);
-  }
-
-  /**
-   * Обработчик клика по списку листа
-   */
-  selectTodo(event: Event) {
-
-    event.stopPropagation();
-    this.select.emit(this.item());
   }
 
   /**
