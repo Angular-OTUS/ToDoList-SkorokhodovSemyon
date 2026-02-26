@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
-import { TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
+import { CreateToDoTask, TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
 import { ToDoListItem } from 'src/app/components/to-do-list-item/to-do-list-item';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,7 +45,7 @@ export class ToDoList implements OnInit {
   /**
    * Происходит ли загрузка данных
    */
-  readonly isLoading = signal<boolean>(true);
+  public isLoading: Signal<boolean> = this.toDoListService.getIsLoading();
 
   /**
    * Список тасок
@@ -79,9 +79,6 @@ export class ToDoList implements OnInit {
   ngOnInit() {
 
     this.toDoListService.loadTasks();
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 500);
   }
 
   //endregion
@@ -90,7 +87,7 @@ export class ToDoList implements OnInit {
   /**
    * Добавляет новую таску
    */
-  addTaskHandler(payload: ToDoTask) {
+  addTaskHandler(payload: CreateToDoTask) {
 
     this.toDoListService.addTask({
       title: payload.title,

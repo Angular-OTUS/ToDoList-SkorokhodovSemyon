@@ -87,8 +87,9 @@ export class ToDoListItem {
 
       if (this.isEditing() && this.titleInput()) {
 
-        const el = this.titleInput()!.nativeElement;
-        el.focus();
+        afterNextRender(() => {
+          this.titleInput()?.nativeElement.focus();
+        });
       }
     });
 
@@ -103,7 +104,7 @@ export class ToDoListItem {
   removeTodo(event: MouseEvent): void {
 
     event.stopPropagation();
-    this.remove.emit(this.item().id!);
+    this.remove.emit(this.item().id);
   }
 
   /**

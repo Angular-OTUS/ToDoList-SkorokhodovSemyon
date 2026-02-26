@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { ToDoTask } from 'src/app/models/to-do-task';
 
 /**
@@ -33,7 +33,9 @@ export class ApiService {
    */
   getAllTasks(): Observable<ToDoTask[]> {
 
-    return this.http.get<ToDoTask[]>(this.apiUrl);
+    return this.http.get<ToDoTask[]>(this.apiUrl).pipe(
+      delay(500)
+    );
   }
 
   /**

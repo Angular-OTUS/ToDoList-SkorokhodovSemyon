@@ -12,7 +12,7 @@ export interface ToDoTask {
   /**
    * Идентификатор таски
    */
-  readonly id?: string;
+  readonly id: string;
 
   /**
    * Название таски
@@ -27,7 +27,15 @@ export interface ToDoTask {
   /**
    * Статус задачи
    */
-  readonly status?: TaskStatus;
+  readonly status: TaskStatus;
 
   //endregion
 }
+
+/**
+ * Тип для создания новой задачи (id отсутствует, статус необязателен)
+ */
+export type CreateToDoTask = Omit<ToDoTask, 'id' | 'status'> & {
+
+  readonly status?: TaskStatus;
+};
