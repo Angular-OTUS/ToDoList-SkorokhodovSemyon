@@ -16,5 +16,10 @@ export class ToDoListStore {
    */
   tasks = signal<ToDoTask[]>([]);
 
+  /**
+   * Происходит ли загрузка данных
+   */
+  isLoading = signal<boolean>(false);
+
   //endregion
 }

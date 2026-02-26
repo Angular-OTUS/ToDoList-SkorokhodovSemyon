@@ -1,7 +1,8 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
-import { ToDoTask } from 'src/app/models/to-do-task';
+import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
 import { ApiService } from 'src/app/services/api/api-service';
+import { finalize } from 'rxjs';
 
 /**
  * Сервис для работы с тасками
@@ -30,9 +31,15 @@ export class ToDoListService {
    */
   loadTasks(): void {
 
-    this.apiService.getAllTasks().subscribe(tasks => {
-      this.store.tasks.set(tasks);
-    });
+    this.store.isLoading.set(true);
+
+    this.apiService.getAllTasks()
+      .pipe(
+        finalize(() => this.store.isLoading.set(false))
+      )
+      .subscribe(tasks => {
+        this.store.tasks.set(tasks);
+      });
   }
 
   /**
@@ -40,7 +47,7 @@ export class ToDoListService {
    *
    * @param task - Новая таска.
    */
-  addTask(task: ToDoTask): void {
+  addTask(task: CreateToDoTask): void {
 
     const newTask: ToDoTask = {
       ...task,
@@ -85,6 +92,14 @@ export class ToDoListService {
         current.map(t => t.id === savedTask.id ? savedTask : t)
       );
     });
+  }
+
+  /**
+   * Возвращает сигнал загрузки для использования в компонентах
+   */
+  getIsLoading(): Signal<boolean> {
+
+    return this.store.isLoading.asReadonly();
   }
 
   //endregion
