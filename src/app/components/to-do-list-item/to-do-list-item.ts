@@ -96,18 +96,16 @@ export class ToDoListItem {
   /**
    * Обработчик клика по кнопке удаления.
    */
-  removeTodo(event: MouseEvent): void {
+  removeTodo(): void {
 
-    event.stopPropagation();
     this.remove.emit(this.item().id);
   }
 
   /**
    * Включает режим редактирования
    */
-  enableEditMode(event: MouseEvent): void {
+  enableEditMode(): void {
 
-    event.stopPropagation();
     this.editedTitle.set(this.item().title);
     this.isEditing.set(true);
   }
@@ -115,9 +113,7 @@ export class ToDoListItem {
   /**
    * Сохраняет изменения
    */
-  saveTitle(event?: Event): void {
-
-    event?.stopPropagation();
+  saveTitle(): void {
 
     const newTitle = this.editedTitle().trim();
     if (newTitle && newTitle !== this.item().title) {
@@ -134,9 +130,8 @@ export class ToDoListItem {
   /**
    * Отменяет редактирование
    */
-  cancelEdit(event?: Event): void {
+  cancelEdit(): void {
 
-    event?.stopPropagation();
     this.isEditing.set(false);
   }
 
