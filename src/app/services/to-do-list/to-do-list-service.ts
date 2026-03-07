@@ -1,6 +1,8 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
-import { ToDoTask } from 'src/app/models/to-do-task';
+import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
+import { ApiService } from 'src/app/services/api/api-service';
+import { finalize } from 'rxjs';
 
 /**
  * Сервис для работы с тасками
@@ -16,22 +18,46 @@ export class ToDoListService {
    */
   private readonly store = inject(ToDoListStore)
 
+  /**
+   * Сервис для работы с Апи
+   */
+  private readonly apiService = inject(ApiService);
+
   //endregion
   //region Public
+
+  /**
+   * Загружает таски из БД
+   */
+  loadTasks(): void {
+
+    this.store.isLoading.set(true);
+
+    this.apiService.getAllTasks()
+      .pipe(
+        finalize(() => this.store.isLoading.set(false))
+      )
+      .subscribe(tasks => {
+        this.store.tasks.set(tasks);
+      });
+  }
 
   /**
    * Добавляет новую таску в хранилище.
    *
    * @param task - Новая таска.
    */
-  addTask(task: ToDoTask): void {
+  addTask(task: CreateToDoTask): void {
 
     const newTask: ToDoTask = {
       ...task,
       id: Date.now().toString(),
+      status: task.status || 'InProgress',
     }
 
-    this.store.tasks.update(currentTasks => [...currentTasks, newTask]);
+    this.apiService.createTask(newTask).subscribe(createdTask => {
+      this.store.tasks.update(current => [...current, createdTask]);
+    });
   }
 
   /**
@@ -49,9 +75,9 @@ export class ToDoListService {
    */
   deleteTask(id: string): void {
 
-    this.store.tasks.update(currentTasks =>
-      currentTasks.filter(task => task.id !== id),
-    );
+    this.apiService.deleteTask(id).subscribe(() => {
+      this.store.tasks.update(current => current.filter(t => t.id !== id));
+    });
   }
 
   /**
@@ -61,11 +87,19 @@ export class ToDoListService {
    */
   updateTask(updatedTask: ToDoTask): void {
 
-    this.store.tasks.update(currentTasks =>
-      currentTasks.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
-    );
+    this.apiService.updateTask(updatedTask).subscribe(savedTask => {
+      this.store.tasks.update(current =>
+        current.map(t => t.id === savedTask.id ? savedTask : t)
+      );
+    });
+  }
+
+  /**
+   * Возвращает сигнал загрузки для использования в компонентах
+   */
+  getIsLoading(): Signal<boolean> {
+
+    return this.store.isLoading.asReadonly();
   }
 
   //endregion
