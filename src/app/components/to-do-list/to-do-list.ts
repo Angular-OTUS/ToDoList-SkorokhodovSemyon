@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+  signal,
+  Signal
+} from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
 import { CreateToDoTask, TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
@@ -11,6 +21,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-do-item';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -41,11 +52,6 @@ export class ToDoList implements OnInit {
    * Сервис для работы с тасками
    */
   readonly toDoListService = inject(ToDoListService);
-
-  /**
-   * Сервис для работы с уведомлениями
-   */
-  readonly toastService: ToastService = inject(ToastService);
 
   /**
    * Текущий ActivatedRoute — объект, описывающий активный маршрут
@@ -92,6 +98,11 @@ export class ToDoList implements OnInit {
   readonly statusFilter = signal<TaskStatus | null>(null);
 
   /**
+   * Ссылка на контекст уничтожения компонента для отписок
+   */
+  private readonly destroyRef = inject(DestroyRef);
+
+  /**
    * Отфильтрованный список для отображения
    */
   readonly filteredTaskList: Signal<ToDoTask[]> = computed(() => {
@@ -107,10 +118,13 @@ export class ToDoList implements OnInit {
 
   ngOnInit() {
 
-    this.toDoListService.loadTasks();
+    this.toDoListService.loadTasks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
     this.extractIdFromRoute();
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.extractIdFromRoute();
     });
@@ -127,9 +141,7 @@ export class ToDoList implements OnInit {
     this.toDoListService.addTask({
       title: payload.title,
       description: payload.description,
-    });
-
-    this.toastService.showToast(`Задача "${payload.title}" успешно добавлена`, 'success');
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   /**
@@ -139,9 +151,9 @@ export class ToDoList implements OnInit {
    */
   removeTaskHandler(id: string) {
 
-    this.toDoListService.deleteTask(id);
-
-    this.toastService.showToast(`Задача успешно удалена`, 'success');
+    this.toDoListService.deleteTask(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   /**
@@ -149,8 +161,9 @@ export class ToDoList implements OnInit {
    */
   updateTaskHandler(updatedTask: ToDoTask) {
 
-    this.toDoListService.updateTask(updatedTask);
-    this.toastService.showToast('Задача обновлена', 'success');
+    this.toDoListService.updateTask(updatedTask)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   //endregion

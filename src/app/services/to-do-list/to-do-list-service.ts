@@ -2,7 +2,8 @@ import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
 import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
 import { ApiService } from 'src/app/services/api/api-service';
-import { finalize } from 'rxjs';
+import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { ToastService } from 'src/app/services/toast/toast-service';
 
 /**
  * Сервис для работы с тасками
@@ -23,23 +24,29 @@ export class ToDoListService {
    */
   private readonly apiService = inject(ApiService);
 
+  /**
+   * Сервис для работы с уведомлениями
+   */
+  readonly toastService: ToastService = inject(ToastService);
+
   //endregion
   //region Public
 
   /**
    * Загружает таски из БД
    */
-  loadTasks(): void {
+  loadTasks(): Observable<ToDoTask[]> {
 
     this.store.isLoading.set(true);
 
-    this.apiService.getAllTasks()
-      .pipe(
-        finalize(() => this.store.isLoading.set(false))
-      )
-      .subscribe(tasks => {
-        this.store.tasks.set(tasks);
-      });
+    return this.apiService.getAllTasks().pipe(
+      tap(tasks => this.store.tasks.set(tasks)),
+      catchError(error => {
+        this.toastService.showToast('Ошибка при загрузке списка задач', 'error');
+        return throwError(() => error);
+      }),
+      finalize(() => this.store.isLoading.set(false))
+    );
   }
 
   /**
@@ -47,7 +54,7 @@ export class ToDoListService {
    *
    * @param task - Новая таска.
    */
-  addTask(task: CreateToDoTask): void {
+  addTask(task: CreateToDoTask): Observable<ToDoTask> {
 
     const newTask: ToDoTask = {
       ...task,
@@ -55,9 +62,16 @@ export class ToDoListService {
       status: task.status || 'InProgress',
     }
 
-    this.apiService.createTask(newTask).subscribe(createdTask => {
-      this.store.tasks.update(current => [...current, createdTask]);
-    });
+    return this.apiService.createTask(newTask).pipe(
+      tap(createdTask => {
+        this.store.tasks.update(current => [...current, createdTask]);
+        this.toastService.showToast(`Задача "${createdTask.title}" успешно добавлена`, 'success');
+      }),
+      catchError(error => {
+        this.toastService.showToast('Ошибка при добавлении задачи', 'error');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -73,11 +87,18 @@ export class ToDoListService {
    *
    * @param id - Идентификатор таски для удаления.
    */
-  deleteTask(id: string): void {
+  deleteTask(id: string): Observable<void> {
 
-    this.apiService.deleteTask(id).subscribe(() => {
-      this.store.tasks.update(current => current.filter(t => t.id !== id));
-    });
+    return this.apiService.deleteTask(id).pipe(
+      tap(() => {
+        this.store.tasks.update(current => current.filter(t => t.id !== id));
+        this.toastService.showToast('Задача успешно удалена', 'success');
+      }),
+      catchError(error => {
+        this.toastService.showToast('Ошибка при удалении задачи', 'error');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -85,13 +106,20 @@ export class ToDoListService {
    *
    * @param updatedTask обновленная задача
    */
-  updateTask(updatedTask: ToDoTask): void {
+  updateTask(updatedTask: ToDoTask): Observable<ToDoTask> {
 
-    this.apiService.updateTask(updatedTask).subscribe(savedTask => {
-      this.store.tasks.update(current =>
-        current.map(t => t.id === savedTask.id ? savedTask : t)
-      );
-    });
+    return this.apiService.updateTask(updatedTask).pipe(
+      tap(savedTask => {
+        this.store.tasks.update(current =>
+          current.map(t => t.id === savedTask.id ? savedTask : t)
+        );
+        this.toastService.showToast('Задача обновлена', 'success');
+      }),
+      catchError(error => {
+        this.toastService.showToast('Ошибка при обновлении задачи', 'error');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
