@@ -2,6 +2,8 @@
 @use 'variables' as v;
 
 .todo-card__description-wrapper {
+  width: 300px; /* Жесткая ширина правой панели */
+  flex-shrink: 0;
   padding: 1.5rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
