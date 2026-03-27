@@ -1,2 +1,23 @@
-<router-outlet></router-outlet>
-<app-toast></app-toast>
+<mat-sidenav-container class="app-layout">
+  <mat-sidenav mode="side" opened class="app-layout__sidenav">
+    <div class="app-layout__logo">
+      <h2>Task Manager</h2>
+    </div>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/tasks" routerLinkActive="active-link">
+        <span matListItemTitle>Backlog</span>
+      </a>
+      <a mat-list-item routerLink="/board" routerLinkActive="active-link">
+        <span matListItemTitle>Board</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-layout__content">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+    <app-toast></app-toast>
+  </mat-sidenav-content>
+</mat-sidenav-container>
