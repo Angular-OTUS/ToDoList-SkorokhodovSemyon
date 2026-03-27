@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ToastMessage } from 'src/app/models/toast';
+import { BehaviorSubject, timer } from 'rxjs';
 
 /**
  * Сервис для уведомлений
@@ -13,7 +14,7 @@ export class ToastService {
   /**
    * Массив активных Toast уведомлений
    */
-  private readonly toasts = signal<ToastMessage[]>([]);
+  private readonly _toasts = new BehaviorSubject<ToastMessage[]>([]);
 
   /**
    * Длительность показа уведомления (5 секунд)
@@ -25,16 +26,13 @@ export class ToastService {
    */
   private idCounter = 0;
 
+  /**
+   * Публичный список уведомлений
+   */
+  public readonly toasts$ = this._toasts.asObservable();
+
   //endregion
   //region Public
-
-  /**
-   * Возвращает массив активных уведомлений
-   */
-  getToasts() {
-
-    return this.toasts.asReadonly();
-  }
 
   /**
    * Показывает новое Toast уведомление
@@ -51,11 +49,12 @@ export class ToastService {
       type,
     };
 
-    this.toasts.update(toasts => [...toasts, newToast]);
+    const currentToasts = this._toasts.getValue();
+    this._toasts.next([...currentToasts, newToast]);
 
-    setTimeout(() => {
+    timer(this.toastDuration).subscribe(() => {
       this.removeToast(id);
-    }, this.toastDuration);
+    });
   }
 
   /**
@@ -65,7 +64,8 @@ export class ToastService {
    */
   removeToast(id: string): void {
 
-    this.toasts.update(toasts => toasts.filter(toast => toast.id !== id));
+    const filteredToasts = this._toasts.getValue().filter(toast => toast.id !== id);
+    this._toasts.next(filteredToasts);
   }
 
   //endregion

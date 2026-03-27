@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ToastService } from 'src/app/services/toast/toast-service';
+import { AsyncPipe } from '@angular/common';
 
 /**
  * Компонент для отображения уведомлений
  */
 @Component({
   selector: 'app-toast',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './toast.html',
   styleUrl: './toast.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +23,7 @@ export class Toast {
   /**
    * Массив активных Toast уведомлений
    */
-  readonly toasts = this.toastService.getToasts();
+  readonly toasts$ = this.toastService.toasts$;
 
   //endregion
   //region Handler
