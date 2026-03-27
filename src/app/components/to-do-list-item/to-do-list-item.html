@@ -1,9 +1,6 @@
 <li
   class="task-item"
-  (click)="selectTodo($event)"
-  (keydown.enter)="selectTodo($event)"
-  (keydown.space)="selectTodo($event)"
-  (dblclick)="enableEditMode($event)"
+  (dblclick)="enableEditMode()"
   appTooltip="Дважды кликни для редактирования, один раз для просмотра"
   #itemTip="appTooltip"
 >
@@ -15,20 +12,20 @@
           #titleInput
           [ngModel]="editedTitle()"
           (ngModelChange)="editedTitle.set($event)"
-          (keydown.enter)="saveTitle($event)"
-          (keydown.escape)="cancelEdit($event)"
+          (keydown.enter.prevent)="saveTitle()"
+          (keydown.escape.prevent)="cancelEdit()"
         />
       </mat-form-field>
 
       <div class="task-item__actions">
         <app-button
           [typeButton]="'add'"
-          (clickHandler)="saveTitle($event)"
+          (click.stop)="saveTitle()"
         >Сохранить</app-button>
 
         <app-button
           [typeButton]="'delete'"
-          (clickHandler)="cancelEdit($event)"
+          (click.stop)="cancelEdit()"
         >Отменить</app-button>
       </div>
     </div>
@@ -43,7 +40,7 @@
     <app-button
       appTooltip="Удалить задачу {{ item().title }}"
       [typeButton]="'delete'"
-      (clickHandler)="removeTodo($event)"
+      (click.stop)="removeTodo()"
       (mouseenter)="itemTip.hide()"
       (mouseleave)="itemTip.show()"
     >Удалить</app-button>

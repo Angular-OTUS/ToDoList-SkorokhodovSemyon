@@ -28,12 +28,4 @@ export class Button {
   typeButton = input<ButtonType>("default");
 
   //endregion
-  //region Output
-
-  /**
-   * Прокси для передачи клика по кнопке
-   */
-  clickHandler = output<MouseEvent>();
-
-  //endregion
 }

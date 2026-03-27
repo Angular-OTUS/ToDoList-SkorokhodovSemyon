@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+  signal,
+  Signal
+} from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
 import { CreateToDoTask, TaskStatus, ToDoTask } from 'src/app/models/to-do-task';
@@ -9,6 +19,9 @@ import { ToastService } from 'src/app/services/toast/toast-service';
 import { Spinner } from 'src/app/components/spinner/spinner';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-do-item';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -24,6 +37,9 @@ import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-d
     MatSelect,
     MatOption,
     CreateToDoItem,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -38,9 +54,19 @@ export class ToDoList implements OnInit {
   readonly toDoListService = inject(ToDoListService);
 
   /**
-   * Сервис для работы с уведомлениями
+   * Текущий ActivatedRoute — объект, описывающий активный маршрут
    */
-  readonly toastService: ToastService = inject(ToastService);
+  private readonly route = inject(ActivatedRoute);
+
+  /**
+   * Сервис для работы с навигацией
+   */
+  private readonly router = inject(Router);
+
+  /**
+   * Текущий id задачи
+   */
+  readonly currentRouteId = signal<string | null>(null);
 
   /**
    * Происходит ли загрузка данных
@@ -55,12 +81,26 @@ export class ToDoList implements OnInit {
   /**
    * Выбранная таска для отображения описания
    */
-  readonly selectedTask = signal<ToDoTask | null>(null);
+  readonly selectedTask = computed(() => {
+
+    const currentId = this.currentRouteId();
+    if (!currentId) {
+
+      return null;
+    }
+
+    return this.taskList().find(t => t.id === currentId) || null;
+  });
 
   /**
    * Выбранный фильтр: null = ALL
    */
   readonly statusFilter = signal<TaskStatus | null>(null);
+
+  /**
+   * Ссылка на контекст уничтожения компонента для отписок
+   */
+  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * Отфильтрованный список для отображения
@@ -78,7 +118,16 @@ export class ToDoList implements OnInit {
 
   ngOnInit() {
 
-    this.toDoListService.loadTasks();
+    this.toDoListService.loadTasks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+    this.extractIdFromRoute();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => {
+      this.extractIdFromRoute();
+    });
   }
 
   //endregion
@@ -92,9 +141,7 @@ export class ToDoList implements OnInit {
     this.toDoListService.addTask({
       title: payload.title,
       description: payload.description,
-    });
-
-    this.toastService.showToast(`Задача "${payload.title}" успешно добавлена`, 'success');
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   /**
@@ -104,27 +151,9 @@ export class ToDoList implements OnInit {
    */
   removeTaskHandler(id: string) {
 
-    const task = this.taskList().find(t => t.id === id);
-    const taskTitle = task?.title || 'Задача';
-
-    if (this.selectedTask()?.id === id) {
-
-      this.selectedTask.set(null);
-    }
-
-    this.toDoListService.deleteTask(id);
-
-    this.toastService.showToast(`Задача "${taskTitle}" успешно удалена`, 'success');
-  }
-
-  /**
-   * Обработчик клика по выбранной таске
-   *
-   * @param task выбранная таска
-   */
-  selectTaskHandler(task: ToDoTask) {
-
-    this.selectedTask.set(task);
+    this.toDoListService.deleteTask(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   /**
@@ -132,8 +161,29 @@ export class ToDoList implements OnInit {
    */
   updateTaskHandler(updatedTask: ToDoTask) {
 
-    this.toDoListService.updateTask(updatedTask);
-    this.toastService.showToast('Задача обновлена', 'success');
+    this.toDoListService.updateTask(updatedTask)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
+  //endregion
+  //region Private
+
+  /**
+   * Извлекает id из пути
+   */
+  private extractIdFromRoute() {
+
+    const childRoute = this.route.firstChild;
+    if (childRoute) {
+
+      const id = childRoute.snapshot.paramMap.get('id');
+      this.currentRouteId.set(id);
+    }
+    else {
+
+      this.currentRouteId.set(null);
+    }
   }
 
   //endregion

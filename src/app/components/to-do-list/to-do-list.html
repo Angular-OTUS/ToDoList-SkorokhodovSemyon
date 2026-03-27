@@ -24,7 +24,8 @@
               class="task-list__item"
               [item]="task"
               [class.selected]="selectedTask()?.id === task.id"
-              (select)="selectTaskHandler($event)"
+              [routerLink]="['/tasks', task.id]"
+              routerLinkActive="selected"
               (remove)="removeTaskHandler($event)"
               (update)="updateTaskHandler($event)"
             >
@@ -44,15 +45,6 @@
       </app-create-to-do-item>
     </div>
 
-    @if (selectedTask() !== null) {
-      <div class="todo-card__description-wrapper">
-        <div class="description-content">
-          <h2>Описание задачи</h2>
-          <p class="description-content__text">
-            {{ selectedTask()!.description }}
-          </p>
-        </div>
-      </div>
-    }
+    <router-outlet [routerOutletData]="selectedTask()"></router-outlet>
   </div>
 </div>

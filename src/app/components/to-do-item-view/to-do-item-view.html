@@ -1,0 +1,10 @@
+@if (task()) {
+  <div class="todo-card__description-wrapper">
+    <div class="description-content">
+      <h2>Описание задачи</h2>
+      <p class="description-content__text">
+        {{ task().description }}
+      </p>
+    </div>
+  </div>
+}
