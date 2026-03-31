@@ -31,14 +31,14 @@ export class Board implements OnInit {
    * Задачи в процессе
    */
   readonly inProgressTasks = computed(() =>
-    this.taskList().filter(t => t.status === 'InProgress')
+    this.taskList().filter(t => t.status === 'InProgress'),
   );
 
   /**
    * Выполненные задачи
    */
   readonly completedTasks = computed(() =>
-    this.taskList().filter(t => t.status === 'Completed')
+    this.taskList().filter(t => t.status === 'Completed'),
   );
 
   /**

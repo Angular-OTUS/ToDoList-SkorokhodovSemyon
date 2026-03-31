@@ -6,7 +6,7 @@ import {
   inject,
   OnInit,
   signal,
-  Signal
+  Signal,
 } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
@@ -122,7 +122,7 @@ export class ToDoList implements OnInit {
     this.extractIdFromRoute();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
-      takeUntilDestroyed(this.destroyRef)
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       this.extractIdFromRoute();
     });

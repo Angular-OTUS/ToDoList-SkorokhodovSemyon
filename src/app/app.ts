@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
     Toast,
     MatSidenavModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
