@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
 import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
 import { ApiService } from 'src/app/services/api/api-service';
-import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, of, tap, throwError } from 'rxjs';
 import { ToastService } from 'src/app/services/toast/toast-service';
 
 /**
@@ -70,7 +70,7 @@ export class ToDoListService {
       catchError(error => {
         this.toastService.showToast('Ошибка при добавлении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -97,7 +97,7 @@ export class ToDoListService {
       catchError(error => {
         this.toastService.showToast('Ошибка при удалении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -116,7 +116,7 @@ export class ToDoListService {
       catchError(error => {
         this.toastService.showToast('Ошибка при обновлении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 

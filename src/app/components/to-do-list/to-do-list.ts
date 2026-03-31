@@ -36,7 +36,7 @@ import { AsyncPipe } from '@angular/common';
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
-    AsyncPipe
+    AsyncPipe,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -115,7 +115,7 @@ export class ToDoList implements OnInit {
     this.extractIdFromRoute();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
-      takeUntilDestroyed(this.destroyRef)
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       this.extractIdFromRoute();
     });

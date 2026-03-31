@@ -35,7 +35,7 @@ export class ApiService {
   getAllTasks(): Observable<ToDoTask[]> {
 
     return this.http.get<ToDoTask[]>(this.apiUrl).pipe(
-      delay(500)
+      delay(500),
     );
   }
 

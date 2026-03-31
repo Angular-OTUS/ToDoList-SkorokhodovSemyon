@@ -1,7 +1,4 @@
 import { Routes } from '@angular/router';
-import { ToDoList } from 'src/app/components/to-do-list/to-do-list';
-import { ToDoItemView } from 'src/app/components/to-do-item-view/to-do-item-view';
-import { Board } from 'src/app/components/board/board';
 
 /**
  * Навигация приложения
@@ -14,20 +11,21 @@ export const routes: Routes = [
   },
   {
     path: 'tasks',
-    component: ToDoList,
+    loadComponent: () => import('./components/to-do-list/to-do-list').then(m => m.ToDoList),
     children: [
       {
         path: ':id',
-        component: ToDoItemView,
-      },
-    ],
+
+        loadComponent: () => import('./components/to-do-item-view/to-do-item-view').then(m => m.ToDoItemView)
+      }
+    ]
   },
   {
     path: 'board',
-    component: Board,
+    loadComponent: () => import('./components/board/board').then(m => m.Board)
   },
   {
     path: '**',
     redirectTo: 'tasks',
-  },
+  }
 ];

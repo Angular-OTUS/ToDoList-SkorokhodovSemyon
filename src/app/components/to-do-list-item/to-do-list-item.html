@@ -32,7 +32,7 @@
   } @else {
     <mat-checkbox
       [checked]="item().status === 'Completed'"
-      (change)="toggleStatus($event)"
+      (change)="toggleStatus()"
       (click)="$event.stopPropagation()"
       color="primary"
     ></mat-checkbox>
