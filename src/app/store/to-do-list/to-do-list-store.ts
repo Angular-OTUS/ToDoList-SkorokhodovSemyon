@@ -16,15 +16,18 @@ export class ToDoListStore {
    * Приватный источник данных для списка задач.
    */
   private readonly _tasks = new BehaviorSubject<ToDoTask[]>([]);
+
   /**
    * Публичный Observable поток списка задач.
    * Используется для подписки на изменения в компонентах (например, через async pipe).
    */
   public readonly tasks$ = this._tasks.asObservable();
+
   /**
    * Приватный источник данных для состояния загрузки.
    */
   private readonly _isLoading = new BehaviorSubject<boolean>(false);
+
   /**
    * Публичный Observable поток состояния загрузки.
    * Используется для подписки на изменения в компонентах.

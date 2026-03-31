@@ -37,6 +37,11 @@ export class ToDoListService {
    */
   loadTasks(): Observable<ToDoTask[]> {
 
+    if (this.store.tasks.length > 0) {
+
+      return of(this.store.tasks);
+    }
+
     this.store.isLoading = true;
 
     return this.apiService.getAllTasks().pipe(
