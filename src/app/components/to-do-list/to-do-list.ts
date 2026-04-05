@@ -4,10 +4,9 @@ import {
   computed,
   DestroyRef,
   inject,
-  input,
   OnInit,
   signal,
-  Signal
+  Signal,
 } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +14,6 @@ import { CreateToDoTask, TaskStatus, ToDoTask } from 'src/app/models/to-do-task'
 import { ToDoListItem } from 'src/app/components/to-do-list-item/to-do-list-item';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ToastService } from 'src/app/services/toast/toast-service';
 import { Spinner } from 'src/app/components/spinner/spinner';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-do-item';
@@ -124,7 +122,7 @@ export class ToDoList implements OnInit {
     this.extractIdFromRoute();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
-      takeUntilDestroyed(this.destroyRef)
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       this.extractIdFromRoute();
     });

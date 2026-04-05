@@ -8,7 +8,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-spinner',
   imports: [
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
   templateUrl: './spinner.html',
   styleUrl: './spinner.scss',

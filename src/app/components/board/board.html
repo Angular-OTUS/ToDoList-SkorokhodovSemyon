@@ -1,0 +1,53 @@
+<div class="board-container">
+  <h1 class="board-container__title">Board</h1>
+
+  @if (!isLoading()) {
+    <div class="board-columns">
+
+      <div class="board-column">
+        <div class="board-column__header">
+          <h2>В процессе</h2>
+          <span class="badge">{{ inProgressTasks().length }}</span>
+        </div>
+
+        <ul class="task-list">
+          @for (task of inProgressTasks(); track task.id) {
+            <app-to-do-list-item
+              class="task-list__item"
+              [item]="task"
+              (remove)="removeTaskHandler($event)"
+              (update)="updateTaskHandler($event)"
+            ></app-to-do-list-item>
+          } @empty {
+            <div class="task-list__empty-message">Нет задач в работе</div>
+          }
+        </ul>
+      </div>
+
+      <div class="board-column board-column--completed">
+        <div class="board-column__header">
+          <h2>Выполнены</h2>
+          <span class="badge">{{ completedTasks().length }}</span>
+        </div>
+
+        <ul class="task-list">
+          @for (task of completedTasks(); track task.id) {
+            <app-to-do-list-item
+              class="task-list__item"
+              [item]="task"
+              (remove)="removeTaskHandler($event)"
+              (update)="updateTaskHandler($event)"
+            ></app-to-do-list-item>
+          } @empty {
+            <div class="task-list__empty-message">Нет завершенных задач</div>
+          }
+        </ul>
+      </div>
+
+    </div>
+  } @else {
+    <div class="spinner-container">
+      <app-spinner></app-spinner>
+    </div>
+  }
+</div>

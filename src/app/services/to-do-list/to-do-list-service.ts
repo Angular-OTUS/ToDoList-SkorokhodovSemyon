@@ -2,7 +2,7 @@ import { inject, Injectable, Signal } from '@angular/core';
 import { ToDoListStore } from 'src/app/store/to-do-list/to-do-list-store';
 import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
 import { ApiService } from 'src/app/services/api/api-service';
-import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, of, tap, throwError } from 'rxjs';
 import { ToastService } from 'src/app/services/toast/toast-service';
 
 /**
@@ -37,6 +37,11 @@ export class ToDoListService {
    */
   loadTasks(): Observable<ToDoTask[]> {
 
+    if (this.store.tasks().length > 0) {
+
+      return of(this.store.tasks());
+    }
+
     this.store.isLoading.set(true);
 
     return this.apiService.getAllTasks().pipe(
@@ -45,7 +50,7 @@ export class ToDoListService {
         this.toastService.showToast('Ошибка при загрузке списка задач', 'error');
         return throwError(() => error);
       }),
-      finalize(() => this.store.isLoading.set(false))
+      finalize(() => this.store.isLoading.set(false)),
     );
   }
 
@@ -70,7 +75,7 @@ export class ToDoListService {
       catchError(error => {
         this.toastService.showToast('Ошибка при добавлении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -97,7 +102,7 @@ export class ToDoListService {
       catchError(error => {
         this.toastService.showToast('Ошибка при удалении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -111,14 +116,14 @@ export class ToDoListService {
     return this.apiService.updateTask(updatedTask).pipe(
       tap(savedTask => {
         this.store.tasks.update(current =>
-          current.map(t => t.id === savedTask.id ? savedTask : t)
+          current.map(t => t.id === savedTask.id ? savedTask : t),
         );
         this.toastService.showToast('Задача обновлена', 'success');
       }),
       catchError(error => {
         this.toastService.showToast('Ошибка при обновлении задачи', 'error');
         return throwError(() => error);
-      })
+      }),
     );
   }
 

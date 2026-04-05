@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
-import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
+import { CreateToDoTask } from 'src/app/models/to-do-task';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

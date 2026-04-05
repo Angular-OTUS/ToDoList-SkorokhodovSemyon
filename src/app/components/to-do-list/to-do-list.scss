@@ -2,8 +2,10 @@
 @use 'variables' as v;
 
 .todo-card {
-  width: max-content; /* Позволяем карточке расширяться под контент */
-  min-width: 500px; /* Минимальная ширина, когда открыт только список */
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
   background: var(--card-background);
   padding: 2rem;
   border-radius: 10px;
@@ -22,7 +24,8 @@
   }
 
   &__list-wrapper {
-    width: 500px; /* Жестко фиксируем ширину левой части */
+    flex: 1;
+    min-width: 400px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
