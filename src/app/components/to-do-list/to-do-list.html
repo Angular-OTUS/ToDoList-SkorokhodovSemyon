@@ -10,7 +10,7 @@
             <mat-label>Фильтр по статусу</mat-label>
             <mat-select
               [ngModel]="statusFilter$ | async"
-              (ngModelChange)="statusFilter$.next($event)"
+              (ngModelChange)="updateStatusFilter($event)"
             >
               <mat-option [value]="null">Все</mat-option>
               <mat-option [value]="'InProgress'">В процессе</mat-option>

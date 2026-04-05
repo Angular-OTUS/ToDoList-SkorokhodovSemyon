@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ToastMessage } from 'src/app/models/toast';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
 
 /**
  * Сервис для уведомлений
@@ -8,7 +8,7 @@ import { BehaviorSubject, timer } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ToastService {
+export class ToastService implements OnDestroy {
   //region Fields
 
   /**
@@ -31,6 +31,11 @@ export class ToastService {
    */
   public readonly toasts$ = this._toasts.asObservable();
 
+  /**
+   * Хранилище подписок на таймеры для каждого уведомления
+   */
+  private readonly timerSubscriptions = new Map<string, Subscription>();
+
   //endregion
   //region Public
 
@@ -52,9 +57,11 @@ export class ToastService {
     const currentToasts = this._toasts.getValue();
     this._toasts.next([...currentToasts, newToast]);
 
-    timer(this.toastDuration).subscribe(() => {
+    const subscription = timer(this.toastDuration).subscribe(() => {
       this.removeToast(id);
     });
+
+    this.timerSubscriptions.set(id, subscription);
   }
 
   /**
@@ -66,6 +73,23 @@ export class ToastService {
 
     const filteredToasts = this._toasts.getValue().filter(toast => toast.id !== id);
     this._toasts.next(filteredToasts);
+
+    if (this.timerSubscriptions.has(id)) {
+
+      this.timerSubscriptions.get(id)?.unsubscribe();
+      this.timerSubscriptions.delete(id);
+    }
+  }
+
+  //endregion
+  //region Hooks
+
+  /**
+   * Очищаем все таймеры при уничтожении сервиса
+   */
+  ngOnDestroy(): void {
+    this.timerSubscriptions.forEach(sub => sub.unsubscribe());
+    this.timerSubscriptions.clear();
   }
 
   //endregion

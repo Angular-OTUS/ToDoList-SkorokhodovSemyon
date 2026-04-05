@@ -61,9 +61,24 @@ export class ToDoList implements OnInit {
   private readonly router = inject(Router);
 
   /**
-   * Текущий id задачи
+   * Приватный Subject для текущего id задачи
    */
-  readonly currentRouteId$ = new BehaviorSubject<string | null>(null);
+  private readonly _currentRouteId = new BehaviorSubject<string | null>(null);
+
+  /**
+   * Публичный поток текущего id задачи
+   */
+  public readonly currentRouteId$ = this._currentRouteId.asObservable();
+
+  /**
+   * Приватный Subject для фильтра статуса
+   */
+  private readonly _statusFilter = new BehaviorSubject<TaskStatus | null>(null);
+
+  /**
+   * Публичный поток фильтра статуса
+   */
+  public readonly statusFilter$ = this._statusFilter.asObservable();
 
   /**
    * Происходит ли загрузка данных
@@ -83,11 +98,6 @@ export class ToDoList implements OnInit {
   ]).pipe(
     map(([tasks, currentId]) => currentId ? tasks.find(t => t.id === currentId) || null : null)
   );
-
-  /**
-   * Выбранный фильтр: null = ALL
-   */
-  readonly statusFilter$ = new BehaviorSubject<TaskStatus | null>(null);
 
   /**
    * Ссылка на контекст уничтожения компонента для отписок
@@ -157,6 +167,14 @@ export class ToDoList implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Обновляет текущий фильтр статуса
+   */
+  updateStatusFilter(status: TaskStatus | null): void {
+
+    this._statusFilter.next(status);
+  }
+
   //endregion
   //region Private
 
@@ -169,11 +187,11 @@ export class ToDoList implements OnInit {
     if (childRoute) {
 
       const id = childRoute.snapshot.paramMap.get('id');
-      this.currentRouteId$.next(id);
+      this._currentRouteId.next(id);
     }
     else {
 
-      this.currentRouteId$.next(null);
+      this._currentRouteId.next(null);
     }
   }
 
