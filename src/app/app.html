@@ -12,6 +12,18 @@
         <span matListItemTitle>Board</span>
       </a>
     </mat-nav-list>
+
+    <div class="app-layout__lang-switcher">
+      <mat-button-toggle-group
+        [value]="currentLang()"
+        (change)="switchLang($event.value)"
+        hideSingleSelectionIndicator
+      >
+        <mat-button-toggle value="ru">RU</mat-button-toggle>
+        <mat-button-toggle value="en">EN</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
   </mat-sidenav>
 
   <mat-sidenav-content class="app-layout__content">

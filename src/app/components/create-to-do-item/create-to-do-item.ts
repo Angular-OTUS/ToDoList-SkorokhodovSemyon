@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Button } from 'src/app/components/button/button';
 import { TooltipDirective } from 'src/app/components/directives/tooltip.directive';
 import { CreateToDoTask } from 'src/app/models/to-do-task';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,7 @@ import { CreateToDoTask } from 'src/app/models/to-do-task';
     Button,
     TooltipDirective,
     ReactiveFormsModule,
+    TranslatePipe,
   ],
   templateUrl: './create-to-do-item.html',
   styleUrl: './create-to-do-item.scss',

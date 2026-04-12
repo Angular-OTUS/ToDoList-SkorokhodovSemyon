@@ -1,0 +1,37 @@
+{
+  "EMPTY_STATE": {
+    "NO_IN_PROGRESS": "No tasks in progress",
+    "NO_COMPLETED": "No completed tasks",
+    "LIST_EMPTY": "Task list is empty"
+  },
+  "FORM": {
+    "TITLE_LABEL": "Task title",
+    "TITLE_REQUIRED": "Title is required",
+    "DESCRIPTION_LABEL": "Task description",
+    "DESCRIPTION_REQUIRED": "Description is required",
+    "SUBMIT": "Add task"
+  },
+  "FILTER": {
+    "LABEL": "Filter by status",
+    "ALL": "All",
+    "IN_PROGRESS": "In progress",
+    "COMPLETED": "Completed"
+  },
+  "TASK": {
+    "EDIT_HINT": "Double-click to edit, single click to view",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE_TITLE": "Delete task",
+    "DELETE": "Delete"
+  },
+  "NOTIFICATION": {
+    "CLOSE": "Close notification",
+    "LOAD_ERROR": "Error loading task list",
+    "ADD_SUCCESS": "Task \"{{ title }}\" successfully added",
+    "ADD_ERROR": "Error adding task",
+    "DELETE_SUCCESS": "Task successfully deleted",
+    "DELETE_ERROR": "Error deleting task",
+    "UPDATE_SUCCESS": "Task updated",
+    "UPDATE_ERROR": "Error updating task"
+  }
+}
