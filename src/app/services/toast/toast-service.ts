@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ToastMessage } from 'src/app/models/toast';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
 
 /**
  * Сервис для уведомлений
@@ -7,13 +8,13 @@ import { ToastMessage } from 'src/app/models/toast';
 @Injectable({
   providedIn: 'root',
 })
-export class ToastService {
+export class ToastService implements OnDestroy {
   //region Fields
 
   /**
    * Массив активных Toast уведомлений
    */
-  private readonly toasts = signal<ToastMessage[]>([]);
+  private readonly _toasts = new BehaviorSubject<ToastMessage[]>([]);
 
   /**
    * Длительность показа уведомления (5 секунд)
@@ -25,16 +26,18 @@ export class ToastService {
    */
   private idCounter = 0;
 
-  //endregion
-  //region Public
+  /**
+   * Публичный список уведомлений
+   */
+  public readonly toasts$ = this._toasts.asObservable();
 
   /**
-   * Возвращает массив активных уведомлений
+   * Хранилище подписок на таймеры для каждого уведомления
    */
-  getToasts() {
+  private readonly timerSubscriptions = new Map<string, Subscription>();
 
-    return this.toasts.asReadonly();
-  }
+  //endregion
+  //region Public
 
   /**
    * Показывает новое Toast уведомление
@@ -51,11 +54,14 @@ export class ToastService {
       type,
     };
 
-    this.toasts.update(toasts => [...toasts, newToast]);
+    const currentToasts = this._toasts.getValue();
+    this._toasts.next([...currentToasts, newToast]);
 
-    setTimeout(() => {
+    const subscription = timer(this.toastDuration).subscribe(() => {
       this.removeToast(id);
-    }, this.toastDuration);
+    });
+
+    this.timerSubscriptions.set(id, subscription);
   }
 
   /**
@@ -65,7 +71,25 @@ export class ToastService {
    */
   removeToast(id: string): void {
 
-    this.toasts.update(toasts => toasts.filter(toast => toast.id !== id));
+    const filteredToasts = this._toasts.getValue().filter(toast => toast.id !== id);
+    this._toasts.next(filteredToasts);
+
+    if (this.timerSubscriptions.has(id)) {
+
+      this.timerSubscriptions.get(id)?.unsubscribe();
+      this.timerSubscriptions.delete(id);
+    }
+  }
+
+  //endregion
+  //region Hooks
+
+  /**
+   * Очищаем все таймеры при уничтожении сервиса
+   */
+  ngOnDestroy(): void {
+    this.timerSubscriptions.forEach(sub => sub.unsubscribe());
+    this.timerSubscriptions.clear();
   }
 
   //endregion

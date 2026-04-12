@@ -1,12 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit,
-  signal,
-  Signal,
 } from '@angular/core';
 import { ToDoListService } from 'src/app/services/to-do-list/to-do-list-service';
 import { FormsModule } from '@angular/forms';
@@ -18,8 +15,9 @@ import { Spinner } from 'src/app/components/spinner/spinner';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { CreateToDoItem } from 'src/app/components/create-to-do-item/create-to-do-item';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { filter } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -38,6 +36,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
+    AsyncPipe,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',
@@ -62,38 +61,43 @@ export class ToDoList implements OnInit {
   private readonly router = inject(Router);
 
   /**
-   * Текущий id задачи
+   * Приватный Subject для текущего id задачи
    */
-  readonly currentRouteId = signal<string | null>(null);
+  private readonly _currentRouteId = new BehaviorSubject<string | null>(null);
+
+  /**
+   * Публичный поток текущего id задачи
+   */
+  public readonly currentRouteId$ = this._currentRouteId.asObservable();
+
+  /**
+   * Приватный Subject для фильтра статуса
+   */
+  private readonly _statusFilter = new BehaviorSubject<TaskStatus | null>(null);
+
+  /**
+   * Публичный поток фильтра статуса
+   */
+  public readonly statusFilter$ = this._statusFilter.asObservable();
 
   /**
    * Происходит ли загрузка данных
    */
-  public isLoading: Signal<boolean> = this.toDoListService.getIsLoading();
-
+  public isLoading$: Observable<boolean> = this.toDoListService.getIsLoading();
   /**
    * Список тасок
    */
-  public taskList: Signal<ToDoTask[]> = this.toDoListService.getTaskList();
+  public taskList$: Observable<ToDoTask[]> = this.toDoListService.getTaskList();
 
   /**
    * Выбранная таска для отображения описания
    */
-  readonly selectedTask = computed(() => {
-
-    const currentId = this.currentRouteId();
-    if (!currentId) {
-
-      return null;
-    }
-
-    return this.taskList().find(t => t.id === currentId) || null;
-  });
-
-  /**
-   * Выбранный фильтр: null = ALL
-   */
-  readonly statusFilter = signal<TaskStatus | null>(null);
+  readonly selectedTask$: Observable<ToDoTask | null> = combineLatest([
+    this.taskList$,
+    this.currentRouteId$
+  ]).pipe(
+    map(([tasks, currentId]) => currentId ? tasks.find(t => t.id === currentId) || null : null)
+  );
 
   /**
    * Ссылка на контекст уничтожения компонента для отписок
@@ -103,13 +107,12 @@ export class ToDoList implements OnInit {
   /**
    * Отфильтрованный список для отображения
    */
-  readonly filteredTaskList: Signal<ToDoTask[]> = computed(() => {
-
-    const filter = this.statusFilter();
-    const tasks = this.taskList();
-
-    return filter === null ? tasks : tasks.filter(t => t.status === filter);
-  });
+  readonly filteredTaskList$: Observable<ToDoTask[]> = combineLatest([
+    this.taskList$,
+    this.statusFilter$
+  ]).pipe(
+    map(([tasks, filter]) => filter === null ? tasks : tasks.filter(t => t.status === filter))
+  );
 
   //endregion
   //region Hooks
@@ -164,6 +167,14 @@ export class ToDoList implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Обновляет текущий фильтр статуса
+   */
+  updateStatusFilter(status: TaskStatus | null): void {
+
+    this._statusFilter.next(status);
+  }
+
   //endregion
   //region Private
 
@@ -176,11 +187,11 @@ export class ToDoList implements OnInit {
     if (childRoute) {
 
       const id = childRoute.snapshot.paramMap.get('id');
-      this.currentRouteId.set(id);
+      this._currentRouteId.next(id);
     }
     else {
 
-      this.currentRouteId.set(null);
+      this._currentRouteId.next(null);
     }
   }
 

@@ -1,17 +1,17 @@
 <div class="board-container">
   <h1 class="board-container__title">Board</h1>
 
-  @if (!isLoading()) {
+  @if (!(isLoading$ | async)) {
     <div class="board-columns">
 
       <div class="board-column">
         <div class="board-column__header">
           <h2>В процессе</h2>
-          <span class="badge">{{ inProgressTasks().length }}</span>
+          <span class="badge">{{ (inProgressTasks$ | async)?.length }}</span>
         </div>
 
         <ul class="task-list">
-          @for (task of inProgressTasks(); track task.id) {
+          @for (task of inProgressTasks$ | async; track task.id) {
             <app-to-do-list-item
               class="task-list__item"
               [item]="task"
@@ -27,11 +27,11 @@
       <div class="board-column board-column--completed">
         <div class="board-column__header">
           <h2>Выполнены</h2>
-          <span class="badge">{{ completedTasks().length }}</span>
+          <span class="badge">{{ (completedTasks$ | async)?.length }}</span>
         </div>
 
         <ul class="task-list">
-          @for (task of completedTasks(); track task.id) {
+          @for (task of completedTasks$ | async; track task.id) {
             <app-to-do-list-item
               class="task-list__item"
               [item]="task"

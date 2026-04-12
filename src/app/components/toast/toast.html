@@ -1,5 +1,5 @@
 <div class="toasts-container">
-  @for (toast of toasts(); track toast.id) {
+  @for (toast of toasts$ | async; track toast.id) {
     <div
       class="toast-item"
       [class.toast-item--success]="toast.type === 'success'"
