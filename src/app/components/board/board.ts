@@ -6,10 +6,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Spinner } from 'src/app/components/spinner/spinner';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-board',
-  imports: [ToDoListItem, Spinner, AsyncPipe],
+  imports: [ToDoListItem, Spinner, AsyncPipe, TranslatePipe],
   templateUrl: './board.html',
   styleUrl: './board.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

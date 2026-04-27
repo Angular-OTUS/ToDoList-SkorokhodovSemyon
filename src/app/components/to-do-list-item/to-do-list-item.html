@@ -1,7 +1,7 @@
 <li
   class="task-item"
   (dblclick)="enableEditMode()"
-  appTooltip="Дважды кликни для редактирования, один раз для просмотра"
+  appTooltip="{{'TASK.EDIT_HINT' | translate}}"
   #itemTip="appTooltip"
 >
   @if (isEditing()) {
@@ -21,12 +21,14 @@
         <app-button
           [typeButton]="'add'"
           (click.stop)="saveTitle()"
-        >Сохранить</app-button>
+        >{{'TASK.SAVE' | translate}}
+        </app-button>
 
         <app-button
           [typeButton]="'delete'"
           (click.stop)="cancelEdit()"
-        >Отменить</app-button>
+        >{{'TASK.CANCEL' | translate}}
+        </app-button>
       </div>
     </div>
   } @else {
@@ -38,11 +40,12 @@
     ></mat-checkbox>
     <span class="task-item__text">{{ item().title }}</span>
     <app-button
-      appTooltip="Удалить задачу {{ item().title }}"
+      appTooltip="{{'TASK.DELETE_TITLE' | translate}} {{ item().title }}"
       [typeButton]="'delete'"
       (click.stop)="removeTodo()"
       (mouseenter)="itemTip.hide()"
       (mouseleave)="itemTip.show()"
-    >Удалить</app-button>
+    >{{'TASK.DELETE' | translate}}
+    </app-button>
   }
 </li>

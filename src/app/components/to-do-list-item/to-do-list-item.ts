@@ -14,6 +14,7 @@ import { TooltipDirective } from 'src/app/components/directives/tooltip.directiv
 import { MatFormField, MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Компонент позиции в списке
@@ -29,6 +30,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     MatInput,
     FormsModule,
     MatCheckbox,
+    TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

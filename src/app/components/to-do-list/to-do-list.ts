@@ -18,6 +18,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, Ro
 import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Компонент для отображения списка тасок и управления ими
@@ -37,6 +38,7 @@ import { AsyncPipe } from '@angular/common';
     RouterLinkActive,
     RouterOutlet,
     AsyncPipe,
+    TranslatePipe,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.scss',

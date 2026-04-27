@@ -4,6 +4,7 @@ import { CreateToDoTask, ToDoTask } from 'src/app/models/to-do-task';
 import { ApiService } from 'src/app/services/api/api-service';
 import { catchError, finalize, Observable, of, tap, throwError } from 'rxjs';
 import { ToastService } from 'src/app/services/toast/toast-service';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Сервис для работы с тасками
@@ -13,6 +14,11 @@ import { ToastService } from 'src/app/services/toast/toast-service';
 })
 export class ToDoListService {
   //region Injected services
+
+  /**
+   * Сервис для работы с i18n
+   */
+  private readonly translate = inject(TranslateService);
 
   /**
    * Хранилище
@@ -47,7 +53,7 @@ export class ToDoListService {
     return this.apiService.getAllTasks().pipe(
       tap(tasks => this.store.tasks = tasks),
       catchError(error => {
-        this.toastService.showToast('Ошибка при загрузке списка задач', 'error');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.LOAD_ERROR'), 'error');
         return throwError(() => error);
       }),
       finalize(() => this.store.isLoading = false)
@@ -70,10 +76,10 @@ export class ToDoListService {
     return this.apiService.createTask(newTask).pipe(
       tap(createdTask => {
         this.store.tasks = [...this.store.tasks, createdTask];
-        this.toastService.showToast(`Задача "${createdTask.title}" успешно добавлена`, 'success');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.ADD_SUCCESS', { title: createdTask.title }), 'success');
       }),
       catchError(error => {
-        this.toastService.showToast('Ошибка при добавлении задачи', 'error');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.ADD_ERROR'), 'error');
         return throwError(() => error);
       }),
     );
@@ -97,10 +103,10 @@ export class ToDoListService {
     return this.apiService.deleteTask(id).pipe(
       tap(() => {
         this.store.tasks = this.store.tasks.filter(t => t.id !== id);
-        this.toastService.showToast('Задача успешно удалена', 'success');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.DELETE_SUCCESS'), 'success');
       }),
       catchError(error => {
-        this.toastService.showToast('Ошибка при удалении задачи', 'error');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.DELETE_ERROR'), 'error');
         return throwError(() => error);
       }),
     );
@@ -116,10 +122,10 @@ export class ToDoListService {
     return this.apiService.updateTask(updatedTask).pipe(
       tap(savedTask => {
         this.store.tasks = this.store.tasks.map(t => t.id === savedTask.id ? savedTask : t);
-        this.toastService.showToast('Задача обновлена', 'success');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.UPDATE_SUCCESS'), 'success');
       }),
       catchError(error => {
-        this.toastService.showToast('Ошибка при обновлении задачи', 'error');
+        this.toastService.showToast(this.translate.instant('NOTIFICATION.UPDATE_ERROR'), 'error');
         return throwError(() => error);
       }),
     );

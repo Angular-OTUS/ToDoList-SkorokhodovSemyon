@@ -7,14 +7,14 @@
       @if (!(isLoading$ | async)) {
         @if ((taskList$ | async)?.length) {
           <mat-form-field appearance="outline" class="add-form__input-field">
-            <mat-label>Фильтр по статусу</mat-label>
+            <mat-label>{{ 'FILTER.LABEL' | translate }}</mat-label>
             <mat-select
               [ngModel]="statusFilter$ | async"
               (ngModelChange)="updateStatusFilter($event)"
             >
-              <mat-option [value]="null">Все</mat-option>
-              <mat-option [value]="'InProgress'">В процессе</mat-option>
-              <mat-option [value]="'Completed'">Выполнены</mat-option>
+              <mat-option [value]="null">{{ 'FILTER.ALL' | translate }}</mat-option>
+              <mat-option [value]="'InProgress'">{{ 'FILTER.IN_PROGRESS' | translate }}</mat-option>
+              <mat-option [value]="'Completed'">{{ 'FILTER.COMPLETED' | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
         }
@@ -31,7 +31,7 @@
             >
             </app-to-do-list-item>
           } @empty {
-            <p class="task-list__empty-message">Список задач пуст</p>
+            <p class="task-list__empty-message">{{ 'EMPTY_STATE.LIST_EMPTY' | translate }}</p>
           }
         </ul>
       } @else {

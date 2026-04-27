@@ -6,7 +6,7 @@
 
       <div class="board-column">
         <div class="board-column__header">
-          <h2>В процессе</h2>
+          <h2>{{ 'FILTER.IN_PROGRESS' | translate }}</h2>
           <span class="badge">{{ (inProgressTasks$ | async)?.length }}</span>
         </div>
 
@@ -19,14 +19,14 @@
               (update)="updateTaskHandler($event)"
             ></app-to-do-list-item>
           } @empty {
-            <div class="task-list__empty-message">Нет задач в работе</div>
+            <div class="task-list__empty-message">{{ 'EMPTY_STATE.NO_IN_PROGRESS' | translate }}</div>
           }
         </ul>
       </div>
 
       <div class="board-column board-column--completed">
         <div class="board-column__header">
-          <h2>Выполнены</h2>
+          <h2>{{ 'FILTER.COMPLETED' | translate }}</h2>
           <span class="badge">{{ (completedTasks$ | async)?.length }}</span>
         </div>
 
@@ -39,7 +39,7 @@
               (update)="updateTaskHandler($event)"
             ></app-to-do-list-item>
           } @empty {
-            <div class="task-list__empty-message">Нет завершенных задач</div>
+            <div class="task-list__empty-message">{{ 'EMPTY_STATE.LIST_EMPTY' | translate }}</div>
           }
         </ul>
       </div>
